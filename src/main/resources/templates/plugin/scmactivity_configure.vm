@@ -1,0 +1,190 @@
+#disable_html_escaping()
+<html>
+<head>
+    <title>$i18n.getText("scm.activity.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()" />
+    $webResourceManager.requireResourcesForContext($i18n.getText("scm-activity-plugin-resources.context"))
+    <script>
+        function prepareEdit() {
+            AJS.$("#scmConfigDisplay").stop().hide();
+            AJS.$("#scmConfigEdit").stop().show();
+        }
+        function prepareCancel() {
+            AJS.$("#scmConfigDisplay").stop().show();
+            AJS.$("#scmConfigEdit").stop().hide();
+        }        
+    </script>   
+</head>
+<body>
+
+
+<!-- config display -->
+
+<div id="scmConfigDisplay">
+<form id="admin" class="aui" method="post" action="ScmActivityConfigAction.jspa">
+<h2>$i18n.getText("scm.activity.admin.label")</h2>
+
+<div class="field-group">
+    <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.db_url.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="disabled-field-id" name="db_url" class="text long-field" value="$!db_url" disabled=""/>
+    <div class="description">$i18n.getText("scm.activity.admin.db_url.description")</div>
+</div>
+
+<!--<div class="field-group">
+    <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.db_driver.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="disabled-field-id" name="db_driver" class="text" value="$!db_driver" disabled=""/>
+    <div class="description">$i18n.getText("scm.activity.admin.db_driver.description")</div>
+</div>-->
+
+<div class="field-group">
+    <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.db_user.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="disabled-field-id" name="db_user" class="text" value="$!db_user" disabled=""/>
+    <div class="description">$i18n.getText("scm.activity.admin.db_user.description")</div>
+</div>
+
+<div class="field-group">
+    <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.db_pass.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="password" id="disabled-field-id" name="db_pass" class="text" value="$!db_pass" disabled=""/>
+    <div class="description">$i18n.getText("scm.activity.admin.db_pass.description")</div>
+</div>
+
+<!--<div class="field-group">
+    <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.jira_event_id.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="disabled-field-id" name="jira_event_id" class="text" value="$!jira_event_id" disabled=""/>
+    <div class="description">$i18n.getText("scm.activity.admin.jira_event_id.description")</div>
+</div>
+
+<div class="field-group">
+    <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.expand_count.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>    
+    <select id="expand_count" name="expand_count" class="text" disabled="">
+        #foreach ($option in [1..10])
+            <option value="$option"
+            #if ($option && $option == $expand_count)selected#end
+            >$option</option>
+        #end
+    </select>
+    <div class="description">$i18n.getText("scm.activity.admin.expand_count.description")</div>
+</div>-->
+
+<div class="aui-buttons">
+    <input class="aui-button" type="button" name="edit" value="Edit &uarr;" onClick="prepareEdit();" /> 
+</div>
+</form>
+</div>
+
+
+
+<!-- config edit -->
+
+
+<div id="scmConfigEdit" style="display: none;">
+<form id="admin" class="aui" method="post" action="ScmActivityConfigAction.jspa" >
+<h2>$i18n.getText("scm.activity.admin.label") &rarr; EDIT</h2>
+
+<div class="field-group">
+    <label for="db_url">
+        $i18n.getText("scm.activity.admin.db_url.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="db_url" name="db_url" class="text long-field" value="$!db_url" />
+    <div class="description">$i18n.getText("scm.activity.admin.db_url.description")</div>
+</div>
+
+<!--<div class="field-group">
+    <label for="db_driver">
+        $i18n.getText("scm.activity.admin.db_driver.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="db_driver" name="db_driver" class="text" value="$!db_driver" />
+    <div class="description">$i18n.getText("scm.activity.admin.db_driver.description")</div>
+</div>-->
+
+<div class="field-group">
+    <label for="db_user">
+        $i18n.getText("scm.activity.admin.db_user.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="db_user" name="db_user" class="text" value="$!db_user" />
+    <div class="description">$i18n.getText("scm.activity.admin.db_user.description")</div>
+</div>
+
+<div class="field-group">
+    <label for="db_pass">
+        $i18n.getText("scm.activity.admin.db_pass.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="password" id="db_pass" name="db_pass" class="text" value="$!db_pass" />
+    <div class="description">$i18n.getText("scm.activity.admin.db_pass.description")</div>
+</div>
+
+<!--<div class="field-group">
+    <label for="jira_event_id">
+        $i18n.getText("scm.activity.admin.jira_event_id.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <input type="text" id="jira_event_id" name="jira_event_id" class="text" value="$!jira_event_id" />
+    <div class="description">$i18n.getText("scm.activity.admin.jira_event_id.description")</div>
+</div>
+
+<div class="field-group">
+    <label for="expand_sets">
+        $i18n.getText("scm.activity.admin.expand_count.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <select id="expand_count" name="expand_count" class="text" value="$!expand_count">
+        #foreach ($option in [1..10])
+            <option value="$option"
+            #if ($option && $option == $expand_count)selected#end
+            >$option</option>
+        #end
+    </select>
+    <div class="description">$i18n.getText("scm.activity.admin.expand_count.description")</div>
+</div>-->
+
+<div class="aui-buttons">
+    <input class="aui-button" type="submit" name="submitted" value="Save &rarr; Initialize" />
+    <input class="aui-button" type="reset" name="reset" value="Reset" />
+    <input class="aui-button" type="button" name="cancel" value="Cancel" onClick="prepareCancel();" />
+</div>
+</form>
+
+<p>Note. Please make sure above SCM Activity database is empty OR only with these data tables i.e. scm_activity, 
+    scm_message, scm_files, scm_job. Other data tables will be removed from above SCM Activity database during initialization.</p>
+
+</div>
+
+<!-- config status -->
+<p style="background-color:#E0FFFF;">$!status</p>
+
+<br/>
+
+<!-- Documentation -->
+<h2>FAQs</h2>
+<p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Database-Set-Up">
+Scm Activity Database Set-up for above JDBC Configuration</a></p>
+<p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-Hooks-OR-Plugins">
+SCM Activity Plugin Hooks OR Plugins</a></p>
+<p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-REST-API">
+SCM Activity Plugin REST API</a></p>
+
+</body>
+</html>

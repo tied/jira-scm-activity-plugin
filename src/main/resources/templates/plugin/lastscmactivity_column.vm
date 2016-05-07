@@ -1,0 +1,86 @@
+#disable_html_escaping()
+#if( $value )
+
+#if( $value.changeType == "subversion" || $value.changeType == "git" )
+    #set( $myChange = "Revision" )
+#elseif ( $value.changeType == "collaborator" || $value.changeType == "swarm" )
+    #set( $myChange = "Review" )
+#elseif ( $value.changeType == "perforce" || $value.changeType == "gerrit" )
+    #set( $myChange = "Change" )
+#else
+    #set( $myChange = "Integration" )
+#end
+
+## Main action detail
+<div class="action-details">
+    <div id="$value.changeType" title="$value.changeType integration"></div>
+    $myChange  
+    #if ( $!value.changeLink && $!value.changeLink != "" ) 
+        <a href="$value.changeLink" target="_blank">$value.changeId</a>
+    #else
+        $value.changeId
+    #end
+    #if ( $!value.changeBranch && $!value.changeBranch != "" )
+        ($value.changeBranch) 
+    #end
+    #if ( $!value.changeTag && $!value.changeTag != "" )
+        ($value.changeTag) 
+    #end
+    by 
+    #if ( $!value.jiraAuthor != "" )
+        <a href="/secure/ViewProfile.jspa?name=$value.changeAuthor">$value.jiraAuthor</a>
+    #else
+        $value.changeAuthor
+    #end
+    -
+    $value.changeDate
+    #if ( $!value.changeStatus && $!value.changeStatus != "" )
+        ($value.changeStatus)
+    #end
+</div>
+
+<div class="action-body">
+    #if ( $!value.changeMessage && $!value.changeMessage != "" )
+        <!--<div style="white-space: pre-wrap;">$value.changeMessage</div>-->
+        <span>$value.changeMessage</span>
+    #end
+
+    #if( $value.changeFiles && $value.changeFiles.size() > 0 )
+        <p><a id="scmactivityaffect" onClick="doAffectsToggleCFC($value.scmId);">Affected files ... ($value.changeFiles.size())</a></p>
+        <div id="scmactivityaffectdivCFC_$value.scmId" style="display: none;font-family: 'Courier New',Courier; font-size: 12px;">
+        <table>
+        #foreach ( $scmFile in $value.changeFiles )
+            <tr><td id="$scmFile.getFileAction().toLowerCase()" style="text-align:right;">$scmFile.getFileAction().toUpperCase()</td>
+            <td>&nbsp;</td>
+            <td>$scmFile.getFileName()
+            #if( $scmFile.getFileVersion() )
+                #$scmFile.getFileVersion()
+            #end
+            </td></tr>
+        #end
+        </table>
+        </div>
+    #end
+
+    #if ( $value.scmJobs && $value.scmJobs.size() > 0 )
+        <p><a id="scmactivityjob" onClick="doJobsToggleCFC($value.scmId);">Jobs ($value.scmJobs.size())</a></p>
+        <div id="scmactivityjobdivCFC_$value.scmId" style="display: none;">
+        <ul>
+        #foreach ( $job in $value.scmJobs )
+            <li>
+                #if ( $!job.jobLink && $!job.jobLink != "" )
+                    <a href="$job.jobLink" target="_blank">$job.jobName</a>
+                #else
+                    $job.jobName
+                #end                        
+                #if ( $!job.jobStatus && $!job.jobStatus != "" )
+                    ($job.jobStatus)
+                #end
+            </li>
+        #end
+        </ul>
+        </div>
+    #end
+</div>
+
+#end

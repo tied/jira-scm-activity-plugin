@@ -1,0 +1,188 @@
+#scmactivityjob {
+    color: blue;
+}
+
+#scmactivityaffect {
+    color: blue;
+}
+
+#scmactivityul {
+    list-style-type: circle;
+}
+
+#subversion {
+    background-image: url('images/svn.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#clearcase-ucm {
+    background-image: url('images/clearcase.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#accurev {
+    background-image: url('images/accurev.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#anonymous {
+    background-image: url('images/anonymous.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#ic-manage {
+    background-image: url('images/icmanage.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#git {
+    background-image: url('images/git.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#gerrit {
+    background-image: url('images/gerrit.gif');
+    background-repeat: no-repeat; 
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#perforce {
+    background-image: url('images/p4.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#clearcase {
+    background-image: url('images/clearcase.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#collaborator {
+    background-image: url('images/collaborator.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#cvs {
+    background-image: url('images/cvs.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 20px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#swarm {
+    background-image: url('images/swarm.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#perforce-software {
+    background-image: url('images/perforcesoftware.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#commander {
+    background-image: url('images/commander.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#jenkins {
+    background-image: url('images/jenkins.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
+#modify, #modified, #edit, #u, #m {
+    color: goldenrod;
+}
+
+#added, #add, #new, #a {
+    color: green;
+}
+
+#delete, #deleted, #del, #d {
+    color: red;
+}

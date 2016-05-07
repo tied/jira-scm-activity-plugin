@@ -1,0 +1,17 @@
+<atlassian-plugin-marketing>
+    <compatibility>
+        <product name="jira" min="6.2.1" max="6.4.12"/>
+    </compatibility>
+    <logo image="images/pluginIcon.png"/>
+    <banner image="images/02_banner.jpg"/>
+    <highlights>
+        <highlight image="images/03_highlight1_ss.jpg" cropped="images/04_highlight1_cropped.jpg"/>
+        <highlight image="images/05_highlight2_ss.jpg" cropped="images/06_highlight2_cropped.jpg"/>
+        <highlight image="images/07_highlight3_ss.jpg" cropped="images/08_highlight3_cropped.jpg"/>
+    </highlights>
+    <screenshots>
+        <screenshot image="images/scm_activity_cf_02.jpg"/>
+        <screenshot image="images/scm_activity_cf_02.jpg"/>
+        <screenshot image="images/scm_activity_cf_03.jpg"/>
+    </screenshots>
+</atlassian-plugin-marketing>

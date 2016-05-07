@@ -1,0 +1,137 @@
+#disable_html_escaping()
+
+#if( $changeType == "subversion" || $changeType == "git" )
+    #set( $myChange = "Revision" )
+#elseif ( $changeType == "collaborator" || $changeType == "swarm" )
+    #set( $myChange = "Review" )
+#elseif ( $changeType == "perforce" || $changeType == "gerrit" )
+    #set( $myChange = "Change" )
+#else
+    #set( $myChange = "Integration" )
+#end
+
+#set( $openClass = "collapsed" )
+#if ( $headerVis )
+    #set( $openClass = "" )
+#end
+
+<div class="issue-data-block twixi-block $openClass">
+    ## The concise version:
+    <div class="actionContainer twixi-wrap concise">
+        <a href="#" class="twixi">
+            <span class="icon twixi-closed">
+                <span>Show</span>
+            </span>
+        </a>
+
+        <div class="action-details flooded">
+            <div id="$changeType" title="$changeType integration"></div>
+            $myChange  
+            #if ( $!changeLink && $!changeLink != "" ) 
+                <a href="$changeLink" target="_blank">$changeId</a>
+            #else
+                $changeId
+            #end
+            #if ( $!changeBranch && $!changeBranch != "" )
+                ($changeBranch) 
+            #end
+            #if ( $!changeTag && $!changeTag != "" )
+                ($changeTag) 
+            #end
+            by 
+            #if ( $!jiraAuthor != "" )
+                <a href="/secure/ViewProfile.jspa?name=$changeAuthor">$jiraAuthor</a>
+            #else
+                $changeAuthor
+            #end
+            -
+            $changeDate
+            #if ( $!changeStatus && $!changeStatus != "" )
+                ($changeStatus)
+            #end
+        </div>
+    </div>
+
+
+    ## The verbose version:
+    <div class="actionContainer twixi-wrap verbose">
+        <a href="#" class="twixi">
+            <span class="icon twixi-opened">
+                <span>Hide</span>
+            </span>
+        </a>
+
+        ## Main action detail
+        <div class="action-details">
+            <div id="$changeType" title="$changeType integration"></div>
+            $myChange  
+            #if ( $!changeLink && $!changeLink != "" ) 
+                <a href="$changeLink" target="_blank">$changeId</a>
+            #else
+                $changeId
+            #end
+            #if ( $!changeBranch && $!changeBranch != "" )
+                ($changeBranch) 
+            #end
+            #if ( $!changeTag && $!changeTag != "" )
+                ($changeTag) 
+            #end
+            by 
+            #if ( $!jiraAuthor != "" )
+                <a href="/secure/ViewProfile.jspa?name=$changeAuthor">$jiraAuthor</a>
+            #else
+                $changeAuthor
+            #end
+            -
+            $changeDate
+            #if ( $!changeStatus && $!changeStatus != "" )
+                ($changeStatus)
+            #end
+        </div>
+
+        <div class="action-body">
+            #if( $!scmMessage && $!scmMessage != "" )
+                <!--<div style="white-space: pre-wrap;">$scmMessage</div>-->
+                <span>$scmMessage</span>
+            #end
+
+            #if( $changeFiles && $changeFiles.size() > 0 )
+                <p><a id="scmactivityaffect" onClick="doAffectsToggle($scmId);">Affected files ... ($changeFiles.size())</a></p>
+                <div id="scmactivityaffectdiv_$scmId" style="display: none;font-family: 'Courier New',Courier; font-size: 12px;">
+                <table>
+                #foreach ( $scmFile in $changeFiles )
+                    <tr><td id="$scmFile.getFileAction().toLowerCase()" style="text-align:right;">$scmFile.getFileAction().toUpperCase()</td>
+                    <td>&nbsp;</td>
+                    <td>$scmFile.getFileName()
+                    #if( $scmFile.getFileVersion() )
+                        #$scmFile.getFileVersion()
+                    #end
+                    </td></tr>
+                #end
+                </table>
+                </div>
+            #end
+                    
+
+            #if( $scmJobs && $scmJobs.size() > 0 )
+                <p><a id="scmactivityjob" onClick="doJobsToggle($scmId);">Jobs ($scmJobs.size())</a></p>
+                <div id="scmactivityjobdiv_$scmId" style="display: none;">
+                <ul id="scmactivityul">
+                #foreach ( $job in $scmJobs )
+                    <li>
+                        #if ( $!job.jobLink && $!job.jobLink != "" )
+                            <a href="$job.jobLink" target="_blank">$job.jobName</a>
+                        #else
+                            $job.jobName
+                        #end                        
+                        #if ( $!job.jobStatus && $!job.jobStatus != "" )
+                            ($job.jobStatus)
+                        #end
+                    </li>
+                #end
+                </ul>
+                </div>
+            #end
+        </div>
+    </div>
+</div>
