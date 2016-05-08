@@ -10,8 +10,12 @@
         <highlight image="images/07_highlight3_ss.jpg" cropped="images/08_highlight3_cropped.jpg"/>
     </highlights>
     <screenshots>
-        <screenshot image="images/scm_activity_cf_02.jpg"/>
-        <screenshot image="images/scm_activity_cf_02.jpg"/>
-        <screenshot image="images/scm_activity_cf_03.jpg"/>
+        <screenshot image="images/scm_activity_0.jpg"/>
+        <screenshot image="images/scm_activity_1.jpg"/>
+        <screenshot image="images/scm_activity_2.jpg"/>
+        <screenshot image="images/scm_activity_3.jpg"/>
+        <screenshot image="images/scm_activity_4.jpg"/>
+        <screenshot image="images/scm_activity_5.jpg"/>
+        <screenshot image="images/scm_activity_6.jpg"/>        
     </screenshots>
 </atlassian-plugin-marketing>
