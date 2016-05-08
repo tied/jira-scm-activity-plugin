@@ -543,8 +543,8 @@ public class ScmActivityServiceImpl implements ScmActivityService {
      */
     
     @Override
-    public ScmActivity[] getScmActivitiesSearch(String changeAuthor, String changeType, 
-            String changeBranch, String changeTag, String changeStatus, String startDate, String stext) {
+    public ScmActivity[] getScmActivitiesSearch(String startDate, String changeType, String changeAuthor, 
+            String changeBranch, String changeTag, String changeStatus, String stext) {        
         try {
             EntityManager entityManager = ScmActivityEntityManager.getInstance().getEntityManager();
             String sauthor = "%"+changeAuthor+"%";
@@ -558,14 +558,17 @@ public class ScmActivityServiceImpl implements ScmActivityService {
             
             if( changeBranch != null && !"".equals(changeBranch) ) {
                 QUERY += " AND t1.changeBranch LIKE '%"+changeBranch+"%'";
-            }            
+            }
+            
             if( changeTag != null && !"".equals(changeTag) ) {
                 QUERY += " AND t1.changeTag LIKE '%"+changeTag+"%'";
-            }            
+            }
+            
             if( changeStatus != null && !"".equals(changeStatus) ) {
                 QUERY += " AND t1.changeStatus LIKE '%"+changeStatus+"%'";
-            }            
-            if( startDate != null ) {
+            }
+            
+            if( startDate != null && !"".equals(startDate) ) {
                 QUERY += " AND t1.changeDate > '"+startDate+"'";
             }
             

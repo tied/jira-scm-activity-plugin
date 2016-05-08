@@ -35,16 +35,16 @@ public class ScmActivitySearch extends AbstractJqlFunction {
     public MessageSet validate(User user, FunctionOperand operand, TerminalClause tc) {
         MessageSet messageSet = validateNumberOfArgs(operand, 7);
         if ( messageSet.hasAnyErrors() ) {
-            messageSet.addErrorMessage("The arguments should be in the form (\"Change Author\", "
-                    + "\"Duration\", \"Change Type\", \"Change Branch\", \"Change Tag\", \"Change Status\", \"Change Search Text\")");
+            messageSet.addErrorMessage("The arguments should be in the form (\"Duration\", \"Change Type\", "
+                    + "\"Change Author\", \"Change Branch\", \"Change Tag\", \"Change Status\", \"Change Search Text\")");
         }
         else {
             final List<String> args = operand.getArgs();
-            String duration = args.get(1).trim();
+            String duration = args.get(0).trim();
             if ( duration != null && !duration.isEmpty() ) {
                 if (!jqlDateSupport.validate(duration)) {
-                    messageSet.addErrorMessage("The arguments should be in the form (\"Change Author\", "
-                    + "\"Duration\", \"Change Type\", \"Change Branch\", \"Change Tag\", \"Change Status\", \"Change Search Text\")");
+                    messageSet.addErrorMessage("The arguments should be in the form (\"Duration\", \"Change Type\", "
+                    + "\"Change Author\", \"Change Branch\", \"Change Tag\", \"Change Status\", \"Change Search Text\")");
                     messageSet.addErrorMessage("The duration arg can be either a date or an expression like -5d or -8w.");
                 }
             }
@@ -60,11 +60,11 @@ public class ScmActivitySearch extends AbstractJqlFunction {
         final List<String> args = operand.getArgs();
         
         //user param
-        String author = args.get(0).trim();
+        String author = args.get(2).trim();
         //duration param
-        String duration = args.get(1).trim();
+        String duration = args.get(0).trim();
         //type param
-        String changeType = args.get(2).trim();
+        String changeType = args.get(1).trim();
         //branch param
         String changeBranch = args.get(3).trim();
         //tag param
@@ -82,7 +82,7 @@ public class ScmActivitySearch extends AbstractJqlFunction {
         }
         
         ScmActivity[] issueKeys = ScmActivityServiceImpl.getInstance()
-                .getScmActivitiesSearch(author, changeType, changeBranch, changeTag, changeStatus, jqlDate, changeText);
+                .getScmActivitiesSearch(jqlDate, changeType, author, changeBranch, changeTag, changeStatus, changeText);
         
         if( issueKeys != null ) {
             for( ScmActivity scmActivity : issueKeys ) {
