@@ -518,7 +518,7 @@ public class ScmActivityResource {
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/activity/{changeType}/{issueKey}/{changeId}")
+    @Path("/activity/unset/by/{changeType}/{issueKey}/{changeId}")
     public Response removeScmActivity(@PathParam("changeType") String changeType, @PathParam("issueKey") String issueKey, 
             @PathParam("changeId") String changeId) {
         
@@ -570,7 +570,7 @@ public class ScmActivityResource {
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/activities/{issueKey}")
+    @Path("/activities/unset/by/{issueKey}")
     public Response removeScmActivitiesByIssueKey(@PathParam("issueKey") String issueKey) {    
         LOGGER.debug("processing rest delete change request /activities/"+ issueKey);
         //message object
@@ -611,7 +611,7 @@ public class ScmActivityResource {
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/joblink/{changeType}/{issueKey}/{changeId}/{jobName}")
+    @Path("/joblink/unset/by/{changeType}/{issueKey}/{changeId}/{jobName}")
     public Response removeScmJobLink(@PathParam("changeType") String changeType, @PathParam("issueKey") String issueKey, @PathParam("changeId") String changeId,
             @PathParam("jobName") String jobName) {
         
@@ -664,7 +664,7 @@ public class ScmActivityResource {
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/joblinks/{changeType}/{issueKey}/{changeId}")
+    @Path("/joblinks/unset/by/{changeType}/{issueKey}/{changeId}")
     public Response removeScmJobLinks(@PathParam("changeType") String changeType, @PathParam("issueKey") String issueKey, 
             @PathParam("changeId") String changeId) {
         
@@ -701,8 +701,10 @@ public class ScmActivityResource {
         
         ScmJobService scmJobService = ScmJobServiceImpl.getInstance();
         ScmJob[] scmJobs = scmJobService.getScmJobs(issueKey, changeId, changeType);
-        for( ScmJob job :  scmJobs ) {
-            scmJobService.deleteScmJob(job);
+        if( scmJobs != null ) {
+            for( ScmJob job :  scmJobs ) {
+                scmJobService.deleteScmJob(job);
+            }
         }
         return Response.status(Status.NO_CONTENT).build();
     }

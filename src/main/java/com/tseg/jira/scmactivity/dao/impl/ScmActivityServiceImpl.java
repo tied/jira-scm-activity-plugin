@@ -184,7 +184,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
             LOGGER.error(ex.getLocalizedMessage());
         }
         return null;
-    }
+    }    
     
     
     @Override

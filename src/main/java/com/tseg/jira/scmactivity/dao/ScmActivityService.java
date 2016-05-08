@@ -25,7 +25,7 @@ public interface ScmActivityService {
     
     ScmActivityCustomFieldBean getScmActivityBean(String issueKey, String changeId, String changeType);
     
-    ScmActivity getScmActivity(String issueKey, String changeId, String changeType);
+    ScmActivity getScmActivity(String issueKey, String changeId, String changeType);    
     
     ScmActivityCustomFieldBean getScmActivity(String issueKey, String order, int style);
     
