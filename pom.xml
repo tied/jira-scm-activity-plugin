@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tseg.jira.scmactivity.plugin</groupId>
     <artifactId>jira-scm-activity-plugin</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <developers>
         <developer> 
             <name>Venkat Prasad</name> 
