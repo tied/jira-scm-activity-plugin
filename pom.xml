@@ -20,7 +20,7 @@
         <url>https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki</url>
     </organization>
 
-    <name>JIRA SCM Activity Plugin</name>
+    <name>SCM Activity For JIRA</name>
     <description>The main purpose of this plugin to support or integrate JIRA 
         with all scm change/version control systems( e.g. subversion, git, gerrit, perforce etc.) in the organisations. 
         This plugin also increases JIRA performance by avoiding comments or change-set history field growth,  
