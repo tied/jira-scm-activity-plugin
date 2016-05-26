@@ -92,8 +92,8 @@
             #end
 
             #if( $value.changeFiles && $value.changeFiles.size() > 0 )
-                <p><a id="scmactivityaffect" onClick="doAffectsToggleCF($value.scmId);">Affected files ... ($value.changeFiles.size())</a></p>
-                <div id="scmactivityaffectdivCF_$value.scmId" style="display: none;font-family: 'Courier New',Courier; font-size: 12px;">
+                <p><a id="scmactivityaffect" onClick="doAffectsToggleCF($value.id);">Affected files ... ($value.changeFiles.size())</a></p>
+                <div id="scmactivityaffectdivCF_$value.id" style="display: none;font-family: 'Courier New',Courier; font-size: 12px;">
                 <table>
                 #foreach ( $scmFile in $value.changeFiles )
                     <tr><td id="$scmFile.getFileAction().toLowerCase()" style="text-align:right;">$scmFile.getFileAction().toUpperCase()</td>
@@ -108,11 +108,11 @@
                 </div>
             #end
 
-            #if ( $value.scmJobs && $value.scmJobs.size() > 0 )
-                <p><a id="scmactivityjob" onClick="doJobsToggleCF($value.scmId);">Jobs ($value.scmJobs.size())</a></p>
-                <div id="scmactivityjobdivCF_$value.scmId" style="display: none;">
+            #if ( $value.jobs && $value.jobs.size() > 0 )
+                <p><a id="scmactivityjob" onClick="doJobsToggleCF($value.id);">Jobs ($value.jobs.size())</a></p>
+                <div id="scmactivityjobdivCF_$value.id" style="display: none;">
                 <ul>
-                #foreach ( $job in $value.scmJobs )
+                #foreach ( $job in $value.jobs )
                     <li>
                         #if ( $!job.jobLink && $!job.jobLink != "" )
                             <a href="$job.jobLink" target="_blank">$job.jobName</a>

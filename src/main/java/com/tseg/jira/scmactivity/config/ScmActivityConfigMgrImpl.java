@@ -20,6 +20,7 @@ public class ScmActivityConfigMgrImpl implements ScmActivityConfigMgr {
         configBean.setDb_user(applicationProperties.getString(ScmActivityConfigMgr.DB_USER));
         configBean.setDb_pass(applicationProperties.getString(ScmActivityConfigMgr.DB_PASS));
         configBean.setDb_url(applicationProperties.getString(ScmActivityConfigMgr.DB_URL));
+        configBean.setDb_driver(applicationProperties.getString(ScmActivityConfigMgr.DB_DRIVER));
         return configBean;
     }
 
@@ -28,6 +29,7 @@ public class ScmActivityConfigMgrImpl implements ScmActivityConfigMgr {
         applicationProperties.setString(ScmActivityConfigMgr.DB_USER, configBean.getDb_user());
         applicationProperties.setString(ScmActivityConfigMgr.DB_PASS, configBean.getDb_pass());
         applicationProperties.setString(ScmActivityConfigMgr.DB_URL, configBean.getDb_url());
+        applicationProperties.setString(ScmActivityConfigMgr.DB_DRIVER, configBean.getDb_driver());
     }
     
 }

@@ -1,11 +1,10 @@
 package com.tseg.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.plugin.issuetabpanel.AbstractIssueAction;
 import com.atlassian.jira.plugin.issuetabpanel.IssueTabPanelModuleDescriptor;
-import com.tseg.jira.scmactivity.dao.entities.ScmFile;
-import com.tseg.jira.scmactivity.dao.entities.ScmJob;
-import com.tseg.jira.scmactivity.dao.entities.ScmMessage;
+import com.atlassian.jira.user.ApplicationUser;
+import com.tseg.jira.scmactivity.model.ScmFileBean;
+import com.tseg.jira.scmactivity.model.ScmJobBean;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +20,13 @@ public class ScmActivityAction extends AbstractIssueAction {
     private String changeType;
     private Date changeDate;
     private String scmMessage;
-    private List<ScmFile> changeFiles;
+    private List<ScmFileBean> changeFiles;
     private String changeLink;
     private String changeBranch;
     private String changeTag;    
     private String changeStatus;
     private boolean headerVis;    
-    private List<ScmJob> scmJobs;
+    private List<ScmJobBean> scmJobs;
     
     
     public ScmActivityAction(IssueTabPanelModuleDescriptor descriptor) {
@@ -74,11 +73,11 @@ public class ScmActivityAction extends AbstractIssueAction {
         this.scmMessage = scmMessage;
     }
 
-    public List<ScmFile> getChangeFiles() {
+    public List<ScmFileBean> getChangeFiles() {
         return changeFiles;
     }
 
-    public void setChangeFiles(List<ScmFile> changeFiles) {
+    public void setChangeFiles(List<ScmFileBean> changeFiles) {
         this.changeFiles = changeFiles;
     }    
 
@@ -122,11 +121,11 @@ public class ScmActivityAction extends AbstractIssueAction {
         this.headerVis = headerVis;
     }
 
-    public List<ScmJob> getScmJobs() {
+    public List<ScmJobBean> getScmJobs() {
         return scmJobs;
     }
 
-    public void setScmJobs(List<ScmJob> scmJobs) {
+    public void setScmJobs(List<ScmJobBean> scmJobs) {
         this.scmJobs = scmJobs;
     }
 
@@ -153,7 +152,7 @@ public class ScmActivityAction extends AbstractIssueAction {
         map.put("jiraAuthor", ScmActivityUtils.getInstance().getJiraAuthor(changeAuthor));
         
         if("git".equals(changeType)) {
-            User user = ScmActivityUtils.getInstance().getJiraAuthor4Git(changeAuthor);
+            ApplicationUser user = ScmActivityUtils.getInstance().getJiraAuthor4Git(changeAuthor);
             if( user != null ) {
                 map.put("changeAuthor", user.getName());
                 map.put("jiraAuthor", user.getDisplayName());

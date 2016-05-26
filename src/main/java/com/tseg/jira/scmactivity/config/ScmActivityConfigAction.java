@@ -2,10 +2,9 @@ package com.tseg.jira.scmactivity.config;
 
 import com.tseg.jira.scmactivity.model.ScmActivityConfigBean;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
+import com.tseg.jira.scmactivity.dao.ScmActivityDB;
 import org.apache.log4j.Logger;
-import com.tseg.jira.scmactivity.dao.ScmActivityEntityManager;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
-import net.java.ao.EntityManager;
 
 /**
  * @author vprasad
@@ -38,18 +37,10 @@ public class ScmActivityConfigAction extends JiraWebActionSupport {
 
             LOGGER.debug("Testing scm entity manager configuration settings.");
             
-            ScmActivityEntityManager.getInstance().inValidateEntityManager();
-            
-            EntityManager entityManager = ScmActivityEntityManager.getInstance().getEntityManager();
-            
-            if( entityManager != null ) {
-                ScmMessageBean bean = ScmActivityEntityManager.getInstance().migrateEntities();
-                status = bean.getMessage();
-                index = bean.getResult();
-            }else{
-                status = "Entity Manager is NULL. Connection Failed.";
-                index = 0;
-            }            
+            ScmActivityDB.getInstance().inValidateDataSource();
+            ScmMessageBean bean = ScmActivityDB.getInstance().getConnectionTest();            
+            status = bean.getMessage();
+            index = bean.getId();                   
         }
         return "success";
     }
@@ -76,6 +67,14 @@ public class ScmActivityConfigAction extends JiraWebActionSupport {
 
     public void setDb_url(String db_url) {
         configBean.setDb_url(db_url);
+    }
+    
+    public void setDb_driver(String db_driver) {
+        configBean.setDb_driver(db_driver);
+    }
+    
+    public String getDb_driver() {
+        return configBean.getDb_driver();
     }
     
     public void setSubmitted(String submitted) {

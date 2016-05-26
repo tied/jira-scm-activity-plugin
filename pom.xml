@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tseg.jira.scmactivity.plugin</groupId>
     <artifactId>jira-scm-activity-plugin</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <developers>
         <developer> 
             <name>Venkat Prasad</name> 
@@ -30,15 +30,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.java.dev.activeobjects</groupId>
-            <artifactId>activeobjects</artifactId>
-            <version>0.8.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
             <version>2.1.1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
@@ -52,17 +47,6 @@
             <version>${jira.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Add dependency on jira-core if you want access to JIRA implementation classes as well as the sanctioned API. -->
-        <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->
-        <!--
-        <dependency>
-            <groupId>com.atlassian.jira</groupId>
-            <artifactId>jira-core</artifactId>
-            <version>${jira.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
-        <!-- WIRED TEST RUNNER DEPENDENCIES -->
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
@@ -80,17 +64,6 @@
             <artifactId>gson</artifactId>
             <version>2.2.2-atlassian-1</version>
         </dependency>
-
-		<!-- Uncomment to use TestKit in your project. Details at https://bitbucket.org/atlassian/jira-testkit -->
-		<!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
-		<!--
-		<dependency>
-			<groupId>com.atlassian.jira.tests</groupId>
-			<artifactId>jira-testkit-client</artifactId>
-			<version>${testkit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		-->
     </dependencies>
 
     <build>
@@ -126,12 +99,11 @@
     </build>
 
     <properties>
-        <jira.version>6.4.11</jira.version>
+        <jira.version>7.1.4</jira.version>
         <amps.version>5.0.3</amps.version>
-        <ao.version>0.19.7</ao.version>
         <plugin.testrunner.version>1.2.0</plugin.testrunner.version>
-		<!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->
-		<testkit.version>5.2.26</testkit.version>
+	<!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->
+	<testkit.version>5.2.26</testkit.version>
     </properties>
 
 </project>

@@ -10,16 +10,16 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class ScmMessageBean {
     
     @JsonProperty
-    private long result;
+    private long id;
     @JsonProperty
     private String message;
 
-    public long getResult() {
-        return result;
+    public long getId() {
+        return id;
     }
 
-    public void setResult(long result) {
-        this.result = result;
+    public void setId(long result) {
+        this.id = result;
     }
     
     public String getMessage() {

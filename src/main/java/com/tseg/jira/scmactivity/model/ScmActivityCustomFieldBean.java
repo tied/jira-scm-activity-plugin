@@ -11,7 +11,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class ScmActivityCustomFieldBean {
     
     @JsonProperty
-    private long scmId;
+    private long id;
     @JsonProperty
     private String issueKey;
     @JsonProperty
@@ -37,14 +37,14 @@ public class ScmActivityCustomFieldBean {
     @JsonProperty
     private String changeLink;
     @JsonProperty
-    private List<ScmJobBean> scmjobs;
+    private List<ScmJobBean> jobs;
     
-    public long getScmId() {
-        return scmId;
+    public long getId() {
+        return id;
     }
 
-    public void setScmId(long scmId) {
-        this.scmId = scmId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getChangeType() {
@@ -119,12 +119,12 @@ public class ScmActivityCustomFieldBean {
         this.changeLink = changeLink;
     }
 
-    public List<ScmJobBean> getScmJobs() {
-        return scmjobs;
+    public List<ScmJobBean> getJobs() {
+        return jobs;
     }
 
-    public void setScmJobs(List<ScmJobBean> scmjobs) {
-        this.scmjobs = scmjobs;
+    public void setJobs(List<ScmJobBean> jobs) {
+        this.jobs = jobs;
     }
 
     public String getJiraAuthor() {

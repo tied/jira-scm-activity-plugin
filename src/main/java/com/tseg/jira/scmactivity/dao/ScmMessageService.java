@@ -5,18 +5,21 @@
  */
 package com.tseg.jira.scmactivity.dao;
 
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
-import com.tseg.jira.scmactivity.dao.entities.ScmMessage;
+import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
+import java.sql.Connection;
 
 /**
  *
  * @author vprasad
  */
 public interface ScmMessageService {
-    ScmMessageBean setScmMessage(String message, ScmActivity scmActivity);
     
-    void deleteScmMessage(ScmMessage scmMessage);
+    ScmMessageBean setScmMessage(String message, long scmActivityID, Connection connection);
     
-    ScmMessage getScmMessage(long scmId);
+    ScmMessageBean setScmMessage(ScmChangeSetBean activityBean);
+    
+    void deleteScmMessage(long scmActivityID, Connection connection);
+    
+    ScmMessageBean getScmMessage(long scmActivityID, Connection connection);
 }

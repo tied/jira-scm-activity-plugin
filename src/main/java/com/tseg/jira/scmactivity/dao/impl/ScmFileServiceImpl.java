@@ -5,16 +5,18 @@
  */
 package com.tseg.jira.scmactivity.dao.impl;
 
+import com.tseg.jira.scmactivity.dao.ScmActivityDB;
 import java.sql.SQLException;
-import net.java.ao.EntityManager;
-import com.tseg.jira.scmactivity.dao.ScmActivityEntityManager;
 import com.tseg.jira.scmactivity.dao.ScmFileService;
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
-import com.tseg.jira.scmactivity.dao.entities.ScmFile;
+import com.tseg.jira.scmactivity.model.ScmActivityBean;
+import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmFileBean;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
-import net.java.ao.Query;
 import org.apache.log4j.Logger;
 
 /**
@@ -36,62 +38,126 @@ public class ScmFileServiceImpl implements ScmFileService {
     }
     
     @Override
-    public ScmMessageBean setScmFiles(List<ScmFileBean> changeFiles, ScmActivity scmActivity) {
+    public ScmMessageBean setScmFiles(List<ScmFileBean> changeFiles, long scmActivityID, Connection connection) {
+        PreparedStatement statement = null;
         ScmMessageBean messageBean = new ScmMessageBean();
+        int result = 0;
+        
         try {
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
             
-            if( scmActivity != null && scmActivity.getID() != 0 ) {
+            if( scmActivityID != 0 ) {
                 
                 //clean if existing
-                ScmFile[] scmFiles = getScmFiles(scmActivity.getID());                
-                for(ScmFile file : scmFiles) {
-                    deleteScmFile(file);
-                }
+                deleteScmFiles(scmActivityID, connection);
+                
+                String QUERY = "INSERT INTO scm_files (fileName,fileAction,fileVersion,scmActivityID) "
+                            + "values (?,?,?,?)";
                 
                 //add new
-                for(ScmFileBean fileBean : changeFiles) {
-                    ScmFile scmFile = manager.create(ScmFile.class);
-                    scmFile.setFileName(fileBean.getFileName());
-                    scmFile.setFileAction(fileBean.getFileAction().toUpperCase());
-                    scmFile.setFileVersion(fileBean.getFileVersion());
-                    scmFile.setScmActivity(scmActivity);
-                    scmFile.save();
+                for(ScmFileBean fileBean : changeFiles) {                    
+                    statement = connection.prepareStatement(QUERY);                    
+                    statement.setString(1, fileBean.getFileName());
+                    statement.setString(2, fileBean.getFileAction());
+                    statement.setString(3, fileBean.getFileVersion());
+                    statement.setLong(4, scmActivityID);
+                    result = statement.executeUpdate();
                 }
                 
-                messageBean.setResult(1);
-                messageBean.setMessage("[Info] "+scmActivity.getIssueKey() +" > "+scmActivity.getChangeId()+""
-                    + " activity files rows for scm id["+scmActivity.getID()+"] is updated.");
+                messageBean.setId(result);
+                messageBean.setMessage("[Info] activity files rows for scm id["+scmActivityID+"] is updated.");
             }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
-            messageBean.setMessage(ex.getLocalizedMessage());
+        } catch(SQLException ex) {
+            LOGGER.error(ex);
+            messageBean.setId(result);
+            messageBean.setMessage(ex.getMessage());
+            return messageBean;
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
         }
         return messageBean;
     }
     
     @Override
-    public ScmFile[] getScmFiles(long scmId) {
-        try {
-            
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
-            
-            return manager.find(ScmFile.class, Query.select()
-                    .where("scmActivityID = ?", scmId));
-        
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+    public ScmMessageBean setScmFiles(ScmChangeSetBean activityBean) {
+        ScmMessageBean messageBean = new ScmMessageBean();
+        Connection connection = ScmActivityDB.getInstance().getConnection();
+        long scmActivityID = ScmActivityServiceImpl.getInstance()
+                .getScmActivityID(activityBean.getIssueKey(), activityBean.getChangeId(),
+                        activityBean.getChangeType(), connection);
+        if( scmActivityID > 0 ) {
+            messageBean = setScmFiles(activityBean.getChangeFiles(), scmActivityID, connection);
         }
-        return null;
+        try {
+            if( connection != null ) connection.close();
+        } catch (SQLException ex) {
+            LOGGER.error(ex);
+        }
+        return messageBean;
+    }
+    
+    @Override
+    public List<ScmFileBean> getScmFiles(long scmActivityID, Connection connection) {
+        
+        List<ScmFileBean> files = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            String QUERY = "SELECT * FROM scm_files WHERE scmActivityID=?";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            resultSet = statement.executeQuery();
+            
+            if( resultSet != null ) {
+                files = new ArrayList<ScmFileBean>();
+                ScmFileBean fileBean = null;
+                while( resultSet.next() ){
+                    fileBean = new ScmFileBean();
+                    fileBean.setId(resultSet.getLong("ID"));
+                    fileBean.setFileName(resultSet.getString("fileName"));
+                    fileBean.setFileAction(resultSet.getString("fileAction") );
+                    fileBean.setFileVersion(resultSet.getString("fileVersion") );
+                    files.add(fileBean);
+                }
+            }
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( resultSet != null ) resultSet.close();
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+        return files;
     }
 
     @Override
-    public void deleteScmFile(ScmFile scmFile) {
+    public void deleteScmFiles(long scmActivityID, Connection connection) {
+        PreparedStatement statement = null;        
         try {
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
-            manager.delete(scmFile);
-        } catch (SQLException ex) {
-            System.err.println(ex.getLocalizedMessage());
+            String QUERY = "DELETE FROM scm_files WHERE scmActivityID=?";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            statement.executeUpdate();            
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
         }
     }
     

@@ -1,6 +1,5 @@
 package com.tseg.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
 import com.tseg.jira.scmactivity.model.ScmActivityNotifyBean;
 import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmJobLinkBean;
@@ -15,15 +14,11 @@ import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.issue.MutableIssue;
 import com.atlassian.jira.permission.ProjectPermissions;
 import com.atlassian.jira.security.PermissionManager;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserUtil;
 import com.atlassian.sal.api.user.UserManager;
-import com.tseg.jira.scmactivity.dao.ScmActivityEntityManager;
+import com.tseg.jira.scmactivity.dao.ScmActivityDB;
 import com.tseg.jira.scmactivity.dao.ScmActivityService;
-import com.tseg.jira.scmactivity.dao.ScmFileService;
-import com.tseg.jira.scmactivity.dao.ScmJobService;
-import com.tseg.jira.scmactivity.dao.ScmMessageService;
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
-import com.tseg.jira.scmactivity.dao.entities.ScmJob;
 import com.tseg.jira.scmactivity.dao.impl.ScmActivityServiceImpl;
 import com.tseg.jira.scmactivity.dao.impl.ScmFileServiceImpl;
 import com.tseg.jira.scmactivity.dao.impl.ScmJobServiceImpl;
@@ -139,7 +134,7 @@ public class ScmActivityResource {
                 return Response.ok(scmActivityService.getScmActivity(issueKey, "ASC",0)).build();
             }
         } else {
-            return Response.ok(scmActivityService.getScmActivityList(issueKey)).build();
+            return Response.ok(scmActivityService.getScmActivities(issueKey)).build();
         }
     }
             
@@ -187,14 +182,14 @@ public class ScmActivityResource {
         if( "notify".equals(notify) ) {
             ScmActivityNotifyBean scmActivity = scmActivityService.getScmActivityToNotify(issueKey, changeId, changeType);
             if(scmActivity != null) {                
-                long customEventId = ScmActivityEntityManager.customEventId;
+                long customEventId = ScmActivityDB.customEventId;
                 if( customEventId != 0 ) {
                     fireCustomNotifyEvent(scmActivity, customEventId, "");
                 }
             }
             return Response.ok("DONE").build();
         } else {            
-            return Response.ok(scmActivityService.getScmActivityBean(issueKey, changeId, changeType)).build();
+            return Response.ok(scmActivityService.getScmActivity(issueKey, changeId, changeType)).build();
         }
     }
     
@@ -283,13 +278,12 @@ public class ScmActivityResource {
         
         ScmMessageBean responseBean = scmActivityService.setScmActivity(activityBean);
         
-        if ( responseBean.getResult() != 0 ) {
+        if ( responseBean.getId() != 0 ) {
             if ( activityBean.getNotifyEmail() == true ) {
-                long customEventId = ScmActivityEntityManager.customEventId;
+                long customEventId = ScmActivityDB.customEventId;
                 LOGGER.debug("[debug] processing notification > customEventId - "+ customEventId);
                 if( customEventId != 0 ) {
-                    fireCustomNotifyEvent(ScmActivityServiceImpl.getInstance()
-                            .getScmActivityToNotify(activityBean.getIssueKey(), activityBean.getChangeId(), 
+                    fireCustomNotifyEvent(scmActivityService.getScmActivityToNotify(activityBean.getIssueKey(), activityBean.getChangeId(), 
                                     activityBean.getChangeType()), customEventId, activityBean.getNotifyAs());
                 }
             }
@@ -345,14 +339,10 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
                 
-        ScmMessageService messageService = ScmMessageServiceImpl.getInstance();
-        ScmActivity scmActivity = ScmActivityServiceImpl.getInstance()
-                .getScmActivity(activityBean.getIssueKey(), activityBean.getChangeId(), activityBean.getChangeType());
+        ScmMessageBean responseBean = ScmMessageServiceImpl.getInstance()
+                .setScmMessage(activityBean);
         
-        ScmMessageBean responseBean = messageService
-                .setScmMessage(activityBean.getChangeMessage(), scmActivity);
-        
-        if ( responseBean.getResult() != 0 ) {
+        if ( responseBean.getId() != 0 ) {
             return Response.status(Status.CREATED).entity(responseBean).build();            
         } else {
             return Response.status(Status.BAD_REQUEST).entity(responseBean).build();
@@ -420,14 +410,10 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
         
-        ScmFileService fileService = ScmFileServiceImpl.getInstance();
-        ScmActivity scmActivity = ScmActivityServiceImpl.getInstance()
-                .getScmActivity(activityBean.getIssueKey(), activityBean.getChangeId(), activityBean.getChangeType());
+        ScmMessageBean responseBean = ScmFileServiceImpl.getInstance()
+                .setScmFiles(activityBean);
         
-        ScmMessageBean responseBean = fileService
-                .setScmFiles(activityBean.getChangeFiles(), scmActivity);
-        
-        if ( responseBean.getResult() != 0 ) {
+        if ( responseBean.getId() != 0 ) {
             return Response.status(Status.CREATED).entity(responseBean).build();            
         } else {
             return Response.status(Status.BAD_REQUEST).entity(responseBean).build();
@@ -480,12 +466,12 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
         
-        ScmJobService scmJobService = ScmJobServiceImpl.getInstance();
-        ScmMessageBean responseBean = scmJobService.setScmJob(activityBean);
+        ScmMessageBean responseBean = ScmJobServiceImpl.getInstance()
+                .setScmJob(activityBean);
         
-        if ( responseBean.getResult() != 0 ) {
+        if ( responseBean.getId() != 0 ) {
             if ( activityBean.getNotifyEmail() == true ) {
-                long customEventId = ScmActivityEntityManager.customEventId;
+                long customEventId = ScmActivityDB.customEventId;
                 if( customEventId != 0 ) {
                     fireCustomNotifyEvent(ScmActivityServiceImpl.getInstance()
                             .getScmActivityToNotify(activityBean.getIssueKey(), activityBean.getChangeId(), 
@@ -553,12 +539,8 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
         
-        //get instance
-        ScmActivityService scmActivityService = ScmActivityServiceImpl.getInstance();
-        ScmActivity scmActivity = scmActivityService.getScmActivity(issueKey, changeId, changeType);
-        if( scmActivity != null ) {
-            scmActivityService.deleteScmActivity(scmActivity);
-        }
+        ScmActivityServiceImpl.getInstance().deleteScmActivity(issueKey, changeId, changeType);
+        
         return Response.status(Status.NO_CONTENT).build();
     }
     
@@ -591,12 +573,8 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
         
-        //get instance
-        ScmActivityService scmActivityService = ScmActivityServiceImpl.getInstance();
-        ScmActivity[] scmActivities = scmActivityService.getScmActivities(issueKey);
-        for( ScmActivity scmActivity : scmActivities ) {
-            scmActivityService.deleteScmActivity(scmActivity);
-        }
+        ScmActivityServiceImpl.getInstance().deleteScmActivity(issueKey);
+        
         return Response.status(Status.NO_CONTENT).build();
     }
     
@@ -606,14 +584,14 @@ public class ScmActivityResource {
      * @param changeType
      * @param issueKey
      * @param changeId
-     * @param jobName
+     * @param jobId
      * @return 
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/joblink/unset/by/{changeType}/{issueKey}/{changeId}/{jobName}")
+    @Path("/joblink/unset/by/{changeType}/{issueKey}/{changeId}/{jobId}")
     public Response removeScmJobLink(@PathParam("changeType") String changeType, @PathParam("issueKey") String issueKey, @PathParam("changeId") String changeId,
-            @PathParam("jobName") String jobName) {
+            @PathParam("jobId") Long jobId) {
         
         LOGGER.debug("processing rest get request /joblink/"+ changeType + "/" + issueKey + "/"+ changeId);
         
@@ -622,7 +600,7 @@ public class ScmActivityResource {
         
         //check required paramaters
         if( issueKey == null || "".equals(issueKey) || changeId == null || "".equals(changeId)
-                || jobName == null || "".equals(jobName) || changeType == null || "".equals(changeType) ) {
+                || jobId == 0 || changeType == null || "".equals(changeType) ) {
             messageBean.setMessage("[Error] Required fields are missing.");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
@@ -646,11 +624,9 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
         
-        ScmJobService scmJobService = ScmJobServiceImpl.getInstance();
-        ScmJob ScmJob = scmJobService.getScmJob(issueKey, changeId, changeType, jobName);
-        if( ScmJob !=null ) {
-            scmJobService.deleteScmJob(ScmJob);
-        }
+        ScmJobServiceImpl.getInstance()
+                .deleteScmJob(issueKey, changeId, changeType, jobId);
+        
         return Response.status(Status.NO_CONTENT).build();
     }
     
@@ -699,13 +675,9 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
         
-        ScmJobService scmJobService = ScmJobServiceImpl.getInstance();
-        ScmJob[] scmJobs = scmJobService.getScmJobs(issueKey, changeId, changeType);
-        if( scmJobs != null ) {
-            for( ScmJob job :  scmJobs ) {
-                scmJobService.deleteScmJob(job);
-            }
-        }
+        ScmJobServiceImpl.getInstance()
+                .deleteScmJobs(issueKey, changeId, changeType);
+                
         return Response.status(Status.NO_CONTENT).build();
     }
     
@@ -731,7 +703,7 @@ public class ScmActivityResource {
             
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
-            User checkedInUser = null;
+            ApplicationUser checkedInUser = null;
         
             if( notifyAs != null || !"".equals(notifyAs)) {
                 checkedInUser = userUtil.getUser(notifyAs);
@@ -762,7 +734,7 @@ public class ScmActivityResource {
             issueEventManager.dispatchEvent(eventBundle);
 
             //issueEventManager.dispatchEvent(customEventId, issue, context, checkedInUser, true); //fire email event
-            LOGGER.debug("Fired an event ["+customEventId+"] for scm id - "+ activityBean.getScmId());             
+            LOGGER.debug("Fired an event ["+customEventId+"] for scm id - "+ activityBean.getId());             
         }
     }
         

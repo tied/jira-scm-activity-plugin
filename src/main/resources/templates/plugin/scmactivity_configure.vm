@@ -34,14 +34,14 @@
     <div class="description">$i18n.getText("scm.activity.admin.db_url.description")</div>
 </div>
 
-<!--<div class="field-group">
+<div class="field-group">
     <label for="disabled-field-id">
         $i18n.getText("scm.activity.admin.db_driver.label"):
         <span class="aui-icon icon-required"></span>
     </label>
     <input type="text" id="disabled-field-id" name="db_driver" class="text" value="$!db_driver" disabled=""/>
     <div class="description">$i18n.getText("scm.activity.admin.db_driver.description")</div>
-</div>-->
+</div>
 
 <div class="field-group">
     <label for="disabled-field-id">
@@ -109,14 +109,14 @@
     <div class="description">$i18n.getText("scm.activity.admin.db_url.description")</div>
 </div>
 
-<!--<div class="field-group">
+<div class="field-group">
     <label for="db_driver">
         $i18n.getText("scm.activity.admin.db_driver.label"):
         <span class="aui-icon icon-required"></span>
     </label>
     <input type="text" id="db_driver" name="db_driver" class="text" value="$!db_driver" />
     <div class="description">$i18n.getText("scm.activity.admin.db_driver.description")</div>
-</div>-->
+</div>
 
 <div class="field-group">
     <label for="db_user">

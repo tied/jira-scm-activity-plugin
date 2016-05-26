@@ -18,7 +18,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class ScmActivityNotifyBean {
     
     @JsonProperty
-    private long scmId;
+    private long id;
     @JsonProperty
     private String issueKey;
     @JsonProperty
@@ -50,12 +50,12 @@ public class ScmActivityNotifyBean {
     @JsonProperty
     private String baseUrl;
 
-    public long getScmId() {
-        return scmId;
+    public long getId() {
+        return id;
     }
 
-    public void setScmId(long scmId) {
-        this.scmId = scmId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getIssueKey() {

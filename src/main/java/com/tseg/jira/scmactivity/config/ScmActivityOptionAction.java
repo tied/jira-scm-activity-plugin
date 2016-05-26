@@ -1,7 +1,7 @@
 package com.tseg.jira.scmactivity.config;
 
 import com.atlassian.jira.web.action.JiraWebActionSupport;
-import com.tseg.jira.scmactivity.dao.ScmActivityEntityManager;
+import com.tseg.jira.scmactivity.dao.ScmActivityDB;
 import org.apache.log4j.Logger;
 import com.tseg.jira.scmactivity.model.ScmActivityOptionBean;
 
@@ -36,8 +36,8 @@ public class ScmActivityOptionAction extends JiraWebActionSupport {
             LOGGER.debug("jira event id -> "+ optionBean.getJira_event_id());
             LOGGER.debug("jira expand count -> "+ optionBean.getExpand_count());
             try {
-                ScmActivityEntityManager.customEventId = Long.parseLong(optionBean.getJira_event_id());
-                ScmActivityEntityManager.expandCount = Long.parseLong(optionBean.getExpand_count());
+                ScmActivityDB.customEventId = Long.parseLong(optionBean.getJira_event_id());
+                ScmActivityDB.expandCount = Long.parseLong(optionBean.getExpand_count());
                 status="Saved!";
             }
             catch (NumberFormatException e){

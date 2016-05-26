@@ -5,17 +5,17 @@
  */
 package com.tseg.jira.scmactivity.dao.impl;
 
+import com.tseg.jira.scmactivity.dao.ScmActivityDB;
 import java.sql.SQLException;
-import net.java.ao.EntityManager;
-import com.tseg.jira.scmactivity.dao.ScmActivityEntityManager;
-import com.tseg.jira.scmactivity.dao.ScmActivityService;
 import com.tseg.jira.scmactivity.dao.ScmJobService;
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
-import com.tseg.jira.scmactivity.dao.entities.ScmJob;
 import com.tseg.jira.scmactivity.model.ScmJobBean;
 import com.tseg.jira.scmactivity.model.ScmJobLinkBean;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
-import net.java.ao.Query;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
@@ -39,37 +39,46 @@ public class ScmJobServiceImpl implements ScmJobService {
     @Override
     public ScmMessageBean setScmJob(ScmJobLinkBean jobBean) {
         ScmMessageBean messageBean = new ScmMessageBean();
+        Connection connection = null;
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+        int result = 0;
+        
         try {
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();            
-            ScmActivityService scmService = ScmActivityServiceImpl.getInstance();                        
-            final ScmActivity scmActivity = scmService
-                    .getScmActivity(jobBean.getIssueKey(), jobBean.getChangeId(), jobBean.getChangeType());
+            connection = ScmActivityDB.getInstance().getConnection();
             
-            if( scmActivity != null && scmActivity.getID() != 0 ) {
+            long scmActivityID = ScmActivityServiceImpl.getInstance()
+                    .getScmActivityID(jobBean.getIssueKey(), jobBean.getChangeId(), 
+                            jobBean.getChangeType(), connection);
+            
+            if( scmActivityID > 0 ) {
                 
-                ScmJob scmJob = getScmJob(jobBean.getIssueKey(), jobBean.getChangeId(), 
-                        jobBean.getChangeType(), jobBean.getJobName());
+                long scmJobId = getScmJobId(scmActivityID, jobBean.getJobName(), connection);
                 
-                if( scmJob == null ) {
-                    ScmJob scmJobNew = manager.create(ScmJob.class);
-                    scmJobNew.setJobName(jobBean.getJobName());
-                    scmJobNew.setJobStatus(jobBean.getJobStatus());
-                    scmJobNew.setJobLink(jobBean.getJobLink());
-                    scmJobNew.setScmActivity(scmActivity);
-                    scmJobNew.save();
+                if( scmJobId == 0 ) {
+                    String QUERY = "INSERT INTO scm_job (scmActivityID, jobName, jobLink, jobStatus) VALUES (?,?,?,?)";
+                    statement = connection.prepareStatement(QUERY);
+                    statement.setLong(1, scmActivityID);
+                    statement.setString(2, jobBean.getJobName().trim());
+                    statement.setString(3, jobBean.getJobLink().trim());
+                    statement.setString(4, jobBean.getJobStatus().trim());
+                    result = statement.executeUpdate();
                     
-                    messageBean.setResult(1);
+                    messageBean.setId(result);
                     messageBean.setMessage("[Info] "+jobBean.getIssueKey() +" > "+jobBean.getChangeId()+" > "
                             + jobBean.getJobName() +" joblink is added.");
                 } else {
                     
                     if( jobBean.getJobUpdate() == true ) {
-                        scmJob.setJobName(jobBean.getJobName());
-                        scmJob.setJobStatus(jobBean.getJobStatus());
-                        scmJob.setJobLink(jobBean.getJobLink());
-                        scmJob.save();
+                        String QUERY = "UPDATE scm_job SET jobName=?, jobLink=?, jobStatus=? WHERE id=?";
+                        statement = connection.prepareStatement(QUERY);                   
+                        statement.setString(1, jobBean.getJobName().trim());
+                        statement.setString(2, jobBean.getJobLink().trim());
+                        statement.setString(3, jobBean.getJobStatus().trim());
+                        statement.setLong(4, scmJobId);
+                        result = statement.executeUpdate();
                         
-                        messageBean.setResult(1);
+                        messageBean.setId(result);
                         messageBean.setMessage("[Info] "+jobBean.getIssueKey() +" > "+jobBean.getChangeId()+" > "
                             + jobBean.getJobName() +" joblink is updated.");
                     
@@ -81,67 +90,255 @@ public class ScmJobServiceImpl implements ScmJobService {
             }
         } catch (SQLException ex) {
             LOGGER.error(ex.getLocalizedMessage());
-            messageBean.setMessage(ex.getLocalizedMessage());
+        }
+        finally{
+            try {
+                if( resultSet != null ) resultSet.close();
+                if( statement != null ) statement.close();
+                if( connection != null ) connection.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
         }
         return messageBean;
     }
     
     @Override
-    public ScmJob getScmJob(String issueKey, String changeId, String changeType, String jobName) {        
+    public ScmJobBean getScmJob(String issueKey, String changeId, String changeType, String jobName) {
+        ScmJobBean scmJobBean = null;
+        Connection connection = null;
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+        
         try {
+                    
+            connection = ScmActivityDB.getInstance().getConnection();
             
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
+            long scmActivityID = ScmActivityServiceImpl.getInstance()
+                    .getScmActivityID(issueKey, changeId, 
+                            changeType, connection);
             
-            ScmActivity[] activities = manager.find(ScmActivity.class, Query.select()
-                    .where("issueKey = ? AND changeId = ? AND changeType = ?", issueKey, changeId, changeType));
+            String QUERY = "SELECT * FROM scm_job WHERE scmActivityID=? AND jobName=?";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            statement.setString(2, jobName);
             
-            if( activities.length > 0 ) {
-                ScmActivity scmActivity = activities[0];
-                
-                ScmJob[] jobs = manager.find(ScmJob.class, Query.select()
-                        .where("jobName = ? AND scmActivityID = ?", jobName, scmActivity.getID()));
-                
-                return jobs.length > 0 ? jobs[0] : null;
+            resultSet = statement.executeQuery();
+            
+            if( resultSet.next() ){
+                scmJobBean = new ScmJobBean();
+                scmJobBean.setId(resultSet.getLong("ID"));
+                scmJobBean.setJobName(resultSet.getString("jobName"));
+                scmJobBean.setJobStatus(resultSet.getString("jobStatus"));
+                scmJobBean.setJobLink(resultSet.getString("jobLink"));
+                LOGGER.debug("job id is found returning now - "+ scmJobBean.getId());
             }
             
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
         }
-        return null;
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( resultSet != null ) resultSet.close();
+                if( statement != null ) statement.close();
+                if( connection != null ) connection.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+        return scmJobBean;
+    }
+    
+    
+    @Override
+    public long getScmJobId(long scmActivityID, String jobName, Connection connection) {        
+        long jobId = 0;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            String QUERY = "SELECT ID FROM scm_job WHERE scmActivityID=? AND jobName=?";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            statement.setString(2, jobName);
+            resultSet = statement.executeQuery();
+            if( resultSet.next() ){
+                jobId = resultSet.getLong("ID");
+                LOGGER.debug("job ID is found returning now - "+ jobId);
+            }
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( resultSet != null ) resultSet.close();
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+        return jobId;
     }
 
-    @Override
-    public ScmJob[] getScmJobs(String issueKey, String changeId, String changeType) {
-        try {
-            
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
-            
-            ScmActivity[] activities = manager.find(ScmActivity.class, Query.select()
-                    .where("issueKey = ? AND changeId = ? AND changeType = ?", issueKey, changeId, changeType));
-            
-            if( activities.length > 0 ) {
-                ScmActivity scmActivity = activities[0];
-                
-                ScmJob[] jobs = manager.find(ScmJob.class, Query.select()
-                        .where("scmId = ?", scmActivity.getID()));
-                
-                return jobs;
-            }
-            
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+    //@Override
+    public List<ScmJobBean> getScmJobs(String issueKey, String changeId, String changeType) {
+        ScmMessageBean messageBean = new ScmMessageBean();
+        List<ScmJobBean> jobs = null;
+        long result = 0;
+        Connection connection = ScmActivityDB.getInstance().getConnection();
+        long scmActivityID = ScmActivityServiceImpl.getInstance()
+                .getScmActivityID(issueKey, changeId, changeType, connection);
+        if ( scmActivityID == 0 ) {
+            messageBean.setId(result);
+            messageBean.setMessage("[Error] Scm "+changeType+" Id ["+changeId+"] not exists on issue key ["+issueKey+"].");
+        } else {
+            jobs = getScmJobs(scmActivityID, connection);
         }
-        return null;
+        return jobs;
     }
     
     @Override
-    public void deleteScmJob(ScmJob scmJob) {
+    public void deleteScmJob(String issueKey, String changeId, String changeType, long jobId) {
+        ScmMessageBean messageBean = new ScmMessageBean();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        int result = 0;
+        
         try {
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
-            manager.delete(scmJob);
-        } catch (SQLException ex) {
-            System.err.println(ex.getLocalizedMessage());
+            connection = ScmActivityDB.getInstance().getConnection();
+            
+            long scmActivityID = ScmActivityServiceImpl.getInstance()
+                    .getScmActivityID(issueKey, changeId, 
+                            changeType, connection);
+            
+            if(scmActivityID > 0) {
+                String QUERY = "DELETE FROM scm_job WHERE scmActivityID=? AND ID=?";
+                statement = connection.prepareStatement(QUERY);
+                statement.setLong(1, scmActivityID);
+                statement.setLong(2, jobId);
+
+                result = statement.executeUpdate();
+
+                messageBean.setId(result);
+                messageBean.setMessage("[Info] joblink Id ["+jobId+"] is deleted for scm id ["+ scmActivityID +"].");
+            }
         }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+                if( connection != null ) connection.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+    }
+    
+    @Override
+    public void deleteScmJobs(long scmActivityID, Connection connection) {
+        ScmMessageBean messageBean = new ScmMessageBean();
+        PreparedStatement statement = null;
+        int result = 0;
+        
+        try {
+            String QUERY = "DELETE FROM scm_job WHERE scmActivityID=?";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            result = statement.executeUpdate();
+            
+            messageBean.setId(result);
+            messageBean.setMessage("[Info] joblinks is deleted for scm id ["+ scmActivityID +"].");
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+    }
+    
+    @Override
+    public void deleteScmJobs(String issueKey, String changeId, String changeType) {
+        ScmMessageBean messageBean = new ScmMessageBean();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        int result = 0;
+        
+        try {
+            connection = ScmActivityDB.getInstance().getConnection();
+            
+            long scmActivityID = ScmActivityServiceImpl.getInstance()
+                    .getScmActivityID(issueKey, changeId, 
+                            changeType, connection);
+            
+            if(scmActivityID > 0) {
+                String QUERY = "DELETE FROM scm_job WHERE scmActivityID=?";
+                statement = connection.prepareStatement(QUERY);
+                statement.setLong(1, scmActivityID);
+                result = statement.executeUpdate();
+
+                messageBean.setId(result);
+                messageBean.setMessage("[Info] joblinks is deleted for scm id ["+ scmActivityID +"].");
+            }
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+                if( connection != null ) connection.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+    }    
+
+    @Override
+    public List<ScmJobBean> getScmJobs(long scmActivityID, Connection connection) {
+        List<ScmJobBean> jobs = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            String QUERY = "SELECT * FROM scm_job WHERE scmActivityID=? ORDER BY id ASC";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            resultSet = statement.executeQuery();
+            
+            if( resultSet != null ) {
+                jobs = new ArrayList<ScmJobBean>();
+                ScmJobBean jobBean = null;
+                while( resultSet.next() ){
+                    jobBean = new ScmJobBean();
+                    jobBean.setId( resultSet.getLong("ID") );
+                    jobBean.setJobName( resultSet.getString("jobName") );
+                    jobBean.setJobLink( resultSet.getString("jobLink") );
+                    jobBean.setJobStatus( resultSet.getString("jobStatus") );
+                    jobs.add(jobBean);
+                }
+            }
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( resultSet != null ) resultSet.close();
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+        return jobs;
     }
     
 }

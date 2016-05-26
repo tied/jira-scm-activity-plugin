@@ -1,6 +1,5 @@
 package com.tseg.jira.scmactivity.model;
 
-import com.tseg.jira.scmactivity.dao.entities.ScmFile;
 import java.util.List;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonProperty;

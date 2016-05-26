@@ -11,7 +11,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class ScmJobBean {
     
     @JsonProperty
-    private long jobId;
+    private long id;
     @JsonProperty
     private String issueKey;
     @JsonProperty
@@ -25,12 +25,12 @@ public class ScmJobBean {
     @JsonProperty
     private String jobStatus;
 
-    public long getJobId() {
-        return jobId;
+    public long getId() {
+        return id;
     }
 
-    public void setJobId(long jobId) {
-        this.jobId = jobId;
+    public void setId(long id) {
+        this.id = id;
     }
         
     public String getIssueKey() {

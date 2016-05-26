@@ -5,16 +5,14 @@
  */
 package com.tseg.jira.scmactivity.dao.impl;
 
+import com.tseg.jira.scmactivity.dao.ScmActivityDB;
 import java.sql.SQLException;
-import net.java.ao.EntityManager;
-import com.tseg.jira.scmactivity.dao.ScmActivityEntityManager;
-import com.tseg.jira.scmactivity.dao.ScmActivityService;
 import com.tseg.jira.scmactivity.dao.ScmMessageService;
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
-import com.tseg.jira.scmactivity.dao.entities.ScmMessage;
 import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
-import net.java.ao.Query;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 
 /**
@@ -36,61 +34,122 @@ public class ScmMessageServiceImpl implements ScmMessageService {
     }
     
     @Override
-    public ScmMessageBean setScmMessage(String changeMessage, ScmActivity scmActivity) {
+    public ScmMessageBean setScmMessage(String changeMessage, long scmActivityID, Connection connection) {
         ScmMessageBean messageBean = new ScmMessageBean();
+        PreparedStatement statement = null;
+        int result = 0;
+        
         try {
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
             
-            if( scmActivity != null && scmActivity.getID() != 0 ) {                
-                ScmMessage scmMessage = getScmMessage(scmActivity.getID());                
-                if(scmMessage == null) {
-                    ScmMessage newScmMessage = manager.create(ScmMessage.class);
-                    newScmMessage.setMessage(changeMessage);
-                    newScmMessage.setScmActivity(scmActivity);
-                    newScmMessage.save();
+            if( scmActivityID > 0 ) {                
+                ScmMessageBean scmMessage = getScmMessage(scmActivityID, connection);
+                
+                if( scmMessage == null ) {
+                    String QUERY = "INSERT INTO scm_message (scmActivityID, message) values (?, ?)";
+                    statement = connection.prepareStatement(QUERY);
+                    statement.setLong(1, scmActivityID);
+                    statement.setString(2, changeMessage);
+                    result = statement.executeUpdate();
                     
-                    messageBean.setResult(1);
-                    messageBean.setMessage("[Info] "+scmActivity.getIssueKey() +" > "+scmActivity.getChangeId()+""
-                        + " activity message row ["+newScmMessage.getID()+"] is added.");
+                    messageBean.setId(result);
+                    messageBean.setMessage("[Info] message for activity row ["+scmActivityID+"] is added.");
                     
                 } else {
-                    scmMessage.setMessage(changeMessage);
-                    scmMessage.save();
                     
-                    messageBean.setResult(1);
-                    messageBean.setMessage("[Info] "+scmActivity.getIssueKey() +" > "+scmActivity.getChangeId()+""
-                        + " activity message row ["+scmMessage.getID()+"] is updated.");
+                    String QUERY = "UPDATE scm_message SET message=? WHERE ID=?";
+                    statement = connection.prepareStatement(QUERY);
+                    statement.setString(1, changeMessage);
+                    statement.setLong(2, scmMessage.getId());
+                    result = statement.executeUpdate();
+                    
+                    messageBean.setId(result);
+                    messageBean.setMessage("[Info] activity message row ["+scmMessage.getId()+"] is updated.");
                 }
             } 
         } catch (SQLException ex) {
             LOGGER.error(ex.getLocalizedMessage());
-            messageBean.setMessage(ex.getLocalizedMessage());
+            messageBean.setMessage(ex.getLocalizedMessage());            
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
         }
         return messageBean;
     }
 
     @Override
-    public void deleteScmMessage(ScmMessage scmMessage) {
+    public ScmMessageBean setScmMessage(ScmChangeSetBean activityBean) {
+        ScmMessageBean messageBean = new ScmMessageBean();        
+        Connection connection = ScmActivityDB.getInstance().getConnection();
+        long scmActivityID = ScmActivityServiceImpl.getInstance()
+                .getScmActivityID(activityBean.getIssueKey(), activityBean.getChangeId(),
+                        activityBean.getChangeType(), connection);
+        if( scmActivityID > 0 ) {
+            messageBean = setScmMessage(activityBean.getChangeMessage(), scmActivityID, connection);
+        }
         try {
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();            
-            manager.delete(scmMessage);
+            if( connection != null ) connection.close();
         } catch (SQLException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+            LOGGER.error(ex);
+        }
+        return messageBean;
+    }
+    
+    @Override
+    public void deleteScmMessage(long scmActivityID, Connection connection) {
+        PreparedStatement statement = null;      
+        try{
+            String QUERY = "DELETE FROM scm_message WHERE scmActivityID=?";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            statement.executeUpdate();
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
         }
     }
     
     @Override
-    public ScmMessage getScmMessage(long scmId) {
-        try {
-            EntityManager manager = ScmActivityEntityManager.getInstance().getEntityManager();
-            ScmMessage[] scmMessages = manager.find(ScmMessage.class, Query.select()
-                    .where("scmActivityID = ?", scmId));
-            
-            return scmMessages.length > 0 ? scmMessages[0] : null;
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+    public ScmMessageBean getScmMessage(long scmActivityID, Connection connection) {
+        ScmMessageBean messageBean = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        
+        try{
+            String QUERY = "SELECT * FROM scm_message WHERE scmActivityID=?";
+            statement = connection.prepareStatement(QUERY);
+            statement.setLong(1, scmActivityID);
+            resultSet = statement.executeQuery();
+            if( resultSet.next() ){
+                messageBean = new ScmMessageBean();
+                messageBean.setId(resultSet.getLong("ID"));
+                messageBean.setMessage(resultSet.getString("message"));
+                LOGGER.debug("message id is found returning now - "+ messageBean.getId());
+            }
         }
-        return null;
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( resultSet != null ) resultSet.close();
+                if( statement != null ) statement.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+        
+        return messageBean;
     }
     
 }

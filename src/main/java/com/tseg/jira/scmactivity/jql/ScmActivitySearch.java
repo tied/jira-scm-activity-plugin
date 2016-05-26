@@ -1,6 +1,5 @@
 package com.tseg.jira.scmactivity.jql;
 
-import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.JiraDataType;
 import com.atlassian.jira.JiraDataTypes;
 import com.atlassian.jira.issue.Issue;
@@ -9,13 +8,13 @@ import com.atlassian.jira.jql.operand.QueryLiteral;
 import com.atlassian.jira.jql.query.QueryCreationContext;
 import com.atlassian.jira.jql.util.JqlDateSupport;
 import com.atlassian.jira.plugin.jql.function.AbstractJqlFunction;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.query.clause.TerminalClause;
 import com.atlassian.query.operand.FunctionOperand;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
 import com.tseg.jira.scmactivity.dao.impl.ScmActivityServiceImpl;
 
 /**
@@ -32,7 +31,7 @@ public class ScmActivitySearch extends AbstractJqlFunction {
     }
     
     @Override
-    public MessageSet validate(User user, FunctionOperand operand, TerminalClause tc) {
+    public MessageSet validate(ApplicationUser user, FunctionOperand operand, TerminalClause tc) {
         MessageSet messageSet = validateNumberOfArgs(operand, 7);
         if ( messageSet.hasAnyErrors() ) {
             messageSet.addErrorMessage("The arguments should be in the form (\"Duration\", \"Change Type\", "
@@ -81,13 +80,13 @@ public class ScmActivitySearch extends AbstractJqlFunction {
             jqlDate = jqlDateSupport.getDateString(startDate);
         }
         
-        ScmActivity[] issueKeys = ScmActivityServiceImpl.getInstance()
+        List<String> issueKeys = ScmActivityServiceImpl.getInstance()
                 .getScmActivitiesSearch(jqlDate, changeType, author, changeBranch, changeTag, changeStatus, changeText);
         
         if( issueKeys != null ) {
-            for( ScmActivity scmActivity : issueKeys ) {
+            for( String key : issueKeys ) {
                 Issue issue = null;
-                if( (issue = issueManager.getIssueObject(scmActivity.getIssueKey())) != null ) {
+                if( (issue = issueManager.getIssueObject(key)) != null ) {
                     literals.add(new QueryLiteral(operand, issue.getId()));
                 }
             }

@@ -5,12 +5,12 @@
  */
 package com.tseg.jira.scmactivity.dao;
 
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
 import com.tseg.jira.scmactivity.model.ScmActivityBean;
 import com.tseg.jira.scmactivity.model.ScmActivityCustomFieldBean;
 import com.tseg.jira.scmactivity.model.ScmActivityNotifyBean;
 import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -21,22 +21,22 @@ public interface ScmActivityService {
     
     ScmMessageBean setScmActivity(ScmChangeSetBean activityBean);    
     
-    void deleteScmActivity(ScmActivity scmActivity);        
+    ScmMessageBean deleteScmActivity(String issueKey, String changeId, String changeType);
     
-    ScmActivityCustomFieldBean getScmActivityBean(String issueKey, String changeId, String changeType);
+    ScmMessageBean deleteScmActivity(String issueKey);           
     
-    ScmActivity getScmActivity(String issueKey, String changeId, String changeType);    
+    long getScmActivityID(String issueKey, String changeId, String changeType, Connection connection);
+    
+    ScmActivityBean getScmActivity(String issueKey, String changeId, String changeType);
     
     ScmActivityCustomFieldBean getScmActivity(String issueKey, String order, int style);
     
     ScmActivityNotifyBean getScmActivityToNotify(String issuekey, String changeId, String changeType);
     
-    ScmActivity[] getScmActivities(String issueKey);
+    List<ScmActivityBean> getScmActivities(String issueKey);
 
-    ScmActivity[] getScmActivitiesSearch(String changeText);
+    List<String> getScmActivitiesSearch(String changeText);
     
-    ScmActivity[] getScmActivitiesSearch(String changeAuthor, String changeType, 
+    List<String> getScmActivitiesSearch(String changeAuthor, String changeType, 
             String changeBranch, String changeTag, String changeStatus, String startDate, String changeText);
-            
-    List<ScmActivityBean> getScmActivityList(String issueKey);
 }

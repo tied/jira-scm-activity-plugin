@@ -5,10 +5,10 @@
  */
 package com.tseg.jira.scmactivity.dao;
 
-import com.tseg.jira.scmactivity.dao.entities.ScmActivity;
-import com.tseg.jira.scmactivity.dao.entities.ScmFile;
+import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmFileBean;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -17,9 +17,11 @@ import java.util.List;
  */
 public interface ScmFileService {
     
-    ScmMessageBean setScmFiles(List<ScmFileBean> changeFiles, ScmActivity scmActivity);
+    ScmMessageBean setScmFiles(List<ScmFileBean> changeFiles, long scmActivityID, Connection connection);
     
-    ScmFile[] getScmFiles(long scmId);
+    ScmMessageBean setScmFiles(ScmChangeSetBean activityBean);
     
-    void deleteScmFile(ScmFile scmFile);
+    List<ScmFileBean> getScmFiles(long scmActivityID, Connection connection);
+    
+    void deleteScmFiles(long scmActivityID, Connection connection);
 }

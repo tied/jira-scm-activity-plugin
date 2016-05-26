@@ -5,9 +5,11 @@
  */
 package com.tseg.jira.scmactivity.dao;
 
-import com.tseg.jira.scmactivity.dao.entities.ScmJob;
+import com.tseg.jira.scmactivity.model.ScmJobBean;
 import com.tseg.jira.scmactivity.model.ScmJobLinkBean;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
+import java.sql.Connection;
+import java.util.List;
 
 /**
  *
@@ -17,9 +19,17 @@ public interface ScmJobService {
     
     ScmMessageBean setScmJob(ScmJobLinkBean jobBean);
     
-    ScmJob getScmJob(String issueKey, String changeId, String changeType, String jobName);
+    ScmJobBean getScmJob(String issueKey, String changeId, String changeType, String jobName);
     
-    ScmJob[] getScmJobs(String issueKey, String changeId, String changeType);
+    long getScmJobId(long scmActivityID, String jobName, Connection connection);
     
-    void deleteScmJob(ScmJob scmJob);
+    //List<ScmJobBean> getScmJobs(String issueKey, String changeId, String changeType);
+    
+    List<ScmJobBean> getScmJobs(long scmActivityID, Connection connection);        
+    
+    void deleteScmJobs(long scmActivityID, Connection connection);
+    
+    void deleteScmJobs(String issueKey, String changeId, String changeType);
+    
+    void deleteScmJob(String issueKey, String changeId, String changeType, long jobId);
 }
