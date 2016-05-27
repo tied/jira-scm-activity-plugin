@@ -1,6 +1,5 @@
 package com.tseg.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
 import com.tseg.jira.scmactivity.model.ScmActivityNotifyBean;
 import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmJobLinkBean;
@@ -671,7 +670,7 @@ public class ScmActivityResource {
             
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
-            User checkedInUser = null;
+            ApplicationUser checkedInUser = null;
         
             if( notifyAs != null || !"".equals(notifyAs)) {
                 checkedInUser = userUtil.getUser(notifyAs);

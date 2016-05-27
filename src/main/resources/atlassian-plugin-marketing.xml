@@ -10,7 +10,9 @@
         <highlight image="images/07_highlight3_ss.jpg" cropped="images/08_highlight3_cropped.jpg"/>
     </highlights>
     <screenshots>
-        <screenshot image="images/scm_activity_0.jpg"/>
+        <screenshot image="images/mysql_db_config.jpg"/>
+        <screenshot image="images/sqlite_db_config"/>
+        <screenshot image="images/sqlserver_db_config"/>
         <screenshot image="images/scm_activity_1.jpg"/>
         <screenshot image="images/scm_activity_2.jpg"/>
         <screenshot image="images/scm_activity_3.jpg"/>
