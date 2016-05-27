@@ -23,8 +23,6 @@ public interface ScmActivityService {
     
     ScmMessageBean deleteScmActivity(String issueKey, String changeId, String changeType);
     
-    ScmMessageBean deleteScmActivity(String issueKey);           
-    
     long getScmActivityID(String issueKey, String changeId, String changeType, Connection connection);
     
     ScmActivityBean getScmActivity(String issueKey, String changeId, String changeType);

@@ -24,6 +24,9 @@ public class ScmActivitySchema {
     private static final Logger LOGGER = Logger.getLogger(ScmActivitySchema.class);
     private static ScmActivitySchema scmActivitySchema = null;
     
+    /**
+     * MySQL Schema Table(s)
+     */
     
     private final String MYSQL_SCM_ACTIVITY = "CREATE TABLE IF NOT EXISTS scm_activity ("
             + "ID BIGINT NOT NULL AUTO_INCREMENT,"
@@ -68,6 +71,10 @@ public class ScmActivitySchema {
             + ")";
     
     
+    /**
+     * Microsoft SQL Server Schema Table(s)
+     */
+    
     private final String MSSQL_SCM_ACTIVITY = "IF object_id('scm_activity', 'U') is null CREATE TABLE scm_activity ("
             + "ID BIGINT NOT NULL IDENTITY(1,1),"
             + "issueKey VARCHAR(50) NOT NULL,"
@@ -110,6 +117,49 @@ public class ScmActivitySchema {
             + "CONSTRAINT FK_scm_job_activity FOREIGN KEY (scmActivityID) REFERENCES scm_activity (ID) ON DELETE CASCADE"
             + ")";
     
+    
+    /**
+     * SQLite Schema Table(s)
+     */
+    
+    private final String SQLITE_SCM_ACTIVITY = "CREATE TABLE IF NOT EXISTS scm_activity ("
+            + "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+            + "issueKey VARCHAR(50) NOT NULL,"
+            + "changeId VARCHAR(50) NOT NULL,"
+            + "changeDate VARCHAR(50) NOT NULL,"
+            + "changeAuthor VARCHAR(50) NOT NULL,"
+            + "changeLink VARCHAR(255) NULL,"
+            + "changeType VARCHAR(50) NOT NULL,"
+            + "changeBranch VARCHAR(255) NULL,"
+            + "changeTag VARCHAR(50) NULL,"
+            + "changeStatus VARCHAR(50) NULL,"
+            + "CONSTRAINT scm_issuekey_changeid_type UNIQUE (issueKey, changeId, changeType)"
+            + ")";
+    private final String SQLITE_SCM_MESSAGE = "CREATE TABLE IF NOT EXISTS scm_message ("
+            + "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+            + "scmActivityID BIGINT NOT NULL,"
+            + "message TEXT NULL,"
+            + "CONSTRAINT scm_activity_id UNIQUE (scmActivityID),"
+            + "CONSTRAINT FK_scm_message_activity FOREIGN KEY (scmActivityID) REFERENCES scm_activity(ID) ON DELETE CASCADE"
+            + ")";
+    private final String SQLITE_SCM_FILES = "CREATE TABLE IF NOT EXISTS scm_files ("
+            + "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+            + "scmActivityID BIGINT NOT NULL,"
+            + "fileName VARCHAR(255) NOT NULL,"
+            + "fileAction VARCHAR(50) NOT NULL,"
+            + "fileVersion VARCHAR(50) NULL,"
+            + "CONSTRAINT FK_scm_files_activity FOREIGN KEY (scmActivityID) REFERENCES scm_activity (ID) ON DELETE CASCADE"
+            + ")";
+    private final String SQLITE_SCM_JOB = "CREATE TABLE IF NOT EXISTS scm_job ("
+            + "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+            + "scmActivityID BIGINT NOT NULL,"
+            + "jobName VARCHAR(255) NOT NULL,"
+            + "jobLink VARCHAR(255) NULL,"
+            + "jobStatus VARCHAR(50) NULL,"
+            + "CONSTRAINT scm_activity_id_jobname UNIQUE (jobName, scmActivityID),"
+            + "CONSTRAINT FK_scm_job_activity FOREIGN KEY (scmActivityID) REFERENCES scm_activity (ID) ON DELETE CASCADE"
+            + ")";
+    
     private ScmActivitySchema() {}
 
     public static ScmActivitySchema getInstance() {
@@ -139,17 +189,22 @@ public class ScmActivitySchema {
             ApplicationProperties props = ComponentAccessor.getApplicationProperties();        
             String db_url = props.getString(ScmActivityConfigMgr.DB_URL);
             
-            if( db_url.contains("sqlserver") ) {
+            if( db_url.contains("jdbc:jtds:sqlserver") ) {
                 LOGGER.info("matched");
                 statement.addBatch(MSSQL_SCM_ACTIVITY);
                 statement.addBatch(MSSQL_SCM_MESSAGE);
                 statement.addBatch(MSSQL_SCM_FILES);
                 statement.addBatch(MSSQL_SCM_JOB);
-            } else if( db_url.contains("mysql") ) {
+            } else if( db_url.contains("jdbc:mysql") ) {
                 statement.addBatch(MYSQL_SCM_ACTIVITY);
                 statement.addBatch(MYSQL_SCM_MESSAGE);
                 statement.addBatch(MYSQL_SCM_FILES);
                 statement.addBatch(MYSQL_SCM_JOB); 
+            } else if( db_url.contains("jdbc:sqlite") ) {
+                statement.addBatch(SQLITE_SCM_ACTIVITY);
+                statement.addBatch(SQLITE_SCM_MESSAGE);
+                statement.addBatch(SQLITE_SCM_FILES);
+                statement.addBatch(SQLITE_SCM_JOB);
             }
             
             int[] execs = statement.executeBatch();

@@ -77,6 +77,14 @@ public class ScmActivityConfigAction extends JiraWebActionSupport {
         return configBean.getDb_driver();
     }
     
+    public void setMax_active(String max_active) {
+        configBean.setMax_active(max_active);
+    }
+    
+    public String getMax_active() {
+        return configBean.getMax_active();
+    }
+    
     public void setSubmitted(String submitted) {
         this.submitted = submitted;
     }

@@ -21,7 +21,9 @@ public interface ScmFileService {
     
     ScmMessageBean setScmFiles(ScmChangeSetBean activityBean);
     
-    List<ScmFileBean> getScmFiles(long scmActivityID, Connection connection);
+    List<ScmFileBean> getScmFiles(long scmActivityID, Connection connection);        
+    
+    void deleteScmFile(String issueKey, String changeId, String changeType, long fileId);
     
     void deleteScmFiles(long scmActivityID, Connection connection);
 }

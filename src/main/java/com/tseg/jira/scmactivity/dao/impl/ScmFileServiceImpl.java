@@ -45,16 +45,14 @@ public class ScmFileServiceImpl implements ScmFileService {
         
         try {
             
-            if( scmActivityID != 0 ) {
-                
-                //clean if existing
-                deleteScmFiles(scmActivityID, connection);
+            if( scmActivityID > 0 ) {
+                                
+                deleteScmFiles(scmActivityID, connection); //clean if existing
                 
                 String QUERY = "INSERT INTO scm_files (fileName,fileAction,fileVersion,scmActivityID) "
                             + "values (?,?,?,?)";
-                
-                //add new
-                for(ScmFileBean fileBean : changeFiles) {                    
+                               
+                for(ScmFileBean fileBean : changeFiles) { //add new
                     statement = connection.prepareStatement(QUERY);                    
                     statement.setString(1, fileBean.getFileName());
                     statement.setString(2, fileBean.getFileAction());
@@ -140,6 +138,37 @@ public class ScmFileServiceImpl implements ScmFileService {
         return files;
     }
 
+    @Override
+    public void deleteScmFile(String issueKey, String changeId, String changeType, long fileId) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = ScmActivityDB.getInstance().getConnection();
+            
+            long scmActivityID = ScmActivityServiceImpl.getInstance()
+                    .getScmActivityID(issueKey, changeId, changeType, connection);
+            
+            if( scmActivityID > 0 && fileId > 0 ) {
+                String QUERY = "DELETE FROM scm_files WHERE scmActivityID=? AND ID=?";
+                statement = connection.prepareStatement(QUERY);
+                statement.setLong(1, scmActivityID);
+                statement.setLong(2, fileId);
+                statement.executeUpdate();
+            }
+        }
+        catch(SQLException ex) {
+            LOGGER.error(ex);
+        }
+        finally{
+            try {
+                if( statement != null ) statement.close();
+                if( connection != null ) connection.close();
+            } catch (SQLException ex) {
+                LOGGER.error(ex);
+            }
+        }
+    }
+    
     @Override
     public void deleteScmFiles(long scmActivityID, Connection connection) {
         PreparedStatement statement = null;        

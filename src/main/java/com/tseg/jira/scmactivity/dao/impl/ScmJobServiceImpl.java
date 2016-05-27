@@ -165,7 +165,7 @@ public class ScmJobServiceImpl implements ScmJobService {
             resultSet = statement.executeQuery();
             if( resultSet.next() ){
                 jobId = resultSet.getLong("ID");
-                LOGGER.debug("job ID is found returning now - "+ jobId);
+                LOGGER.debug("job ID is found returning now: "+ jobId);
             }
         }
         catch(SQLException ex) {
@@ -180,24 +180,7 @@ public class ScmJobServiceImpl implements ScmJobService {
             }
         }
         return jobId;
-    }
-
-    //@Override
-    public List<ScmJobBean> getScmJobs(String issueKey, String changeId, String changeType) {
-        ScmMessageBean messageBean = new ScmMessageBean();
-        List<ScmJobBean> jobs = null;
-        long result = 0;
-        Connection connection = ScmActivityDB.getInstance().getConnection();
-        long scmActivityID = ScmActivityServiceImpl.getInstance()
-                .getScmActivityID(issueKey, changeId, changeType, connection);
-        if ( scmActivityID == 0 ) {
-            messageBean.setId(result);
-            messageBean.setMessage("[Error] Scm "+changeType+" Id ["+changeId+"] not exists on issue key ["+issueKey+"].");
-        } else {
-            jobs = getScmJobs(scmActivityID, connection);
-        }
-        return jobs;
-    }
+    }    
     
     @Override
     public void deleteScmJob(String issueKey, String changeId, String changeType, long jobId) {
@@ -264,43 +247,7 @@ public class ScmJobServiceImpl implements ScmJobService {
             }
         }
     }
-    
-    @Override
-    public void deleteScmJobs(String issueKey, String changeId, String changeType) {
-        ScmMessageBean messageBean = new ScmMessageBean();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        int result = 0;
         
-        try {
-            connection = ScmActivityDB.getInstance().getConnection();
-            
-            long scmActivityID = ScmActivityServiceImpl.getInstance()
-                    .getScmActivityID(issueKey, changeId, 
-                            changeType, connection);
-            
-            if(scmActivityID > 0) {
-                String QUERY = "DELETE FROM scm_job WHERE scmActivityID=?";
-                statement = connection.prepareStatement(QUERY);
-                statement.setLong(1, scmActivityID);
-                result = statement.executeUpdate();
-
-                messageBean.setId(result);
-                messageBean.setMessage("[Info] joblinks is deleted for scm id ["+ scmActivityID +"].");
-            }
-        }
-        catch(SQLException ex) {
-            LOGGER.error(ex);
-        }
-        finally{
-            try {
-                if( statement != null ) statement.close();
-                if( connection != null ) connection.close();
-            } catch (SQLException ex) {
-                LOGGER.error(ex);
-            }
-        }
-    }    
 
     @Override
     public List<ScmJobBean> getScmJobs(long scmActivityID, Connection connection) {

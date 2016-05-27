@@ -27,9 +27,7 @@ public interface ScmJobService {
     
     List<ScmJobBean> getScmJobs(long scmActivityID, Connection connection);        
     
-    void deleteScmJobs(long scmActivityID, Connection connection);
-    
-    void deleteScmJobs(String issueKey, String changeId, String changeType);
+    void deleteScmJobs(long scmActivityID, Connection connection);    
     
     void deleteScmJob(String issueKey, String changeId, String changeType, long jobId);
 }

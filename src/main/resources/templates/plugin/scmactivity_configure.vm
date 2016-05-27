@@ -28,7 +28,6 @@
 <div class="field-group">
     <label for="disabled-field-id">
         $i18n.getText("scm.activity.admin.db_url.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
     <input type="text" id="disabled-field-id" name="db_url" class="text long-field" value="$!db_url" disabled=""/>
     <div class="description">$i18n.getText("scm.activity.admin.db_url.description")</div>
@@ -37,16 +36,14 @@
 <div class="field-group">
     <label for="disabled-field-id">
         $i18n.getText("scm.activity.admin.db_driver.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
-    <input type="text" id="disabled-field-id" name="db_driver" class="text" value="$!db_driver" disabled=""/>
+    <input type="text" id="disabled-field-id" name="db_driver" class="text long-field" value="$!db_driver" disabled=""/>
     <div class="description">$i18n.getText("scm.activity.admin.db_driver.description")</div>
 </div>
 
 <div class="field-group">
     <label for="disabled-field-id">
         $i18n.getText("scm.activity.admin.db_user.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
     <input type="text" id="disabled-field-id" name="db_user" class="text" value="$!db_user" disabled=""/>
     <div class="description">$i18n.getText("scm.activity.admin.db_user.description")</div>
@@ -55,10 +52,23 @@
 <div class="field-group">
     <label for="disabled-field-id">
         $i18n.getText("scm.activity.admin.db_pass.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
     <input type="password" id="disabled-field-id" name="db_pass" class="text" value="$!db_pass" disabled=""/>
     <div class="description">$i18n.getText("scm.activity.admin.db_pass.description")</div>
+</div>
+
+<div class="field-group">
+    <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.max_active.label"):
+    </label>    
+    <select id="max_active" name="max_active" class="text" disabled="">
+        #foreach ($option in [20, 40, 60, 80, 100])
+            <option value="$option"
+            #if ($option && $option == $max_active)selected#end
+            >$option</option>
+        #end
+    </select>
+    <div class="description">$i18n.getText("scm.activity.admin.max_active.description")</div>
 </div>
 
 <!--<div class="field-group">
@@ -73,7 +83,6 @@
 <div class="field-group">
     <label for="disabled-field-id">
         $i18n.getText("scm.activity.admin.expand_count.label"):
-        <span class="aui-icon icon-required"></span>
     </label>    
     <select id="expand_count" name="expand_count" class="text" disabled="">
         #foreach ($option in [1..10])
@@ -103,7 +112,6 @@
 <div class="field-group">
     <label for="db_url">
         $i18n.getText("scm.activity.admin.db_url.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
     <input type="text" id="db_url" name="db_url" class="text long-field" value="$!db_url" />
     <div class="description">$i18n.getText("scm.activity.admin.db_url.description")</div>
@@ -112,16 +120,14 @@
 <div class="field-group">
     <label for="db_driver">
         $i18n.getText("scm.activity.admin.db_driver.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
-    <input type="text" id="db_driver" name="db_driver" class="text" value="$!db_driver" />
+    <input type="text" id="db_driver" name="db_driver" class="text long-field" value="$!db_driver" />
     <div class="description">$i18n.getText("scm.activity.admin.db_driver.description")</div>
 </div>
 
 <div class="field-group">
     <label for="db_user">
         $i18n.getText("scm.activity.admin.db_user.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
     <input type="text" id="db_user" name="db_user" class="text" value="$!db_user" />
     <div class="description">$i18n.getText("scm.activity.admin.db_user.description")</div>
@@ -130,10 +136,23 @@
 <div class="field-group">
     <label for="db_pass">
         $i18n.getText("scm.activity.admin.db_pass.label"):
-        <span class="aui-icon icon-required"></span>
     </label>
     <input type="password" id="db_pass" name="db_pass" class="text" value="$!db_pass" />
     <div class="description">$i18n.getText("scm.activity.admin.db_pass.description")</div>
+</div>
+
+<div class="field-group">
+    <label for="expand_sets">
+        $i18n.getText("scm.activity.admin.max_active.label"):
+    </label>
+    <select id="max_active" name="max_active" class="text" value="$!max_active">
+        #foreach ($option in [20, 40, 60, 80, 100])
+            <option value="$option"
+            #if ($option && $option == $max_active)selected#end
+            >$option</option>
+        #end
+    </select>
+    <div class="description">$i18n.getText("scm.activity.admin.max_active.description")</div>
 </div>
 
 <!--<div class="field-group">
@@ -167,9 +186,6 @@
 </div>
 </form>
 
-<p>Note. Please make sure above SCM Activity database is empty OR only with these data tables i.e. scm_activity, 
-    scm_message, scm_files, scm_job. Other data tables will be removed from above SCM Activity database during initialization.</p>
-
 </div>
 
 <!-- config status -->
@@ -180,9 +196,9 @@
 <!-- Documentation -->
 <h2>FAQs</h2>
 <p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Database-Set-Up">
-Scm Activity Database Set-up for above JDBC Configuration</a></p>
+SCM Activity Plugin JDBC Configuration Guide</a></p>
 <p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-Hooks-OR-Plugins">
-SCM Activity Plugin Hooks OR Plugins</a></p>
+SCM Activity Plugin Hooks Scripts Or Plugins</a></p>
 <p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-REST-API">
 SCM Activity Plugin REST API</a></p>
 

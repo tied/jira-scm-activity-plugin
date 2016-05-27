@@ -1,5 +1,6 @@
 package com.tseg.jira.scmactivity.plugin;
 
+import com.atlassian.crowd.embedded.api.User;
 import com.tseg.jira.scmactivity.model.ScmActivityNotifyBean;
 import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmJobLinkBean;
@@ -542,41 +543,7 @@ public class ScmActivityResource {
         ScmActivityServiceImpl.getInstance().deleteScmActivity(issueKey, changeId, changeType);
         
         return Response.status(Status.NO_CONTENT).build();
-    }
-    
-    
-    /**
-     * Rest method to remove SCM Activities by issue key
-     * @param issueKey
-     * @return 
-     */
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/activities/unset/by/{issueKey}")
-    public Response removeScmActivitiesByIssueKey(@PathParam("issueKey") String issueKey) {    
-        LOGGER.debug("processing rest delete change request /activities/"+ issueKey);
-        //message object
-        ScmMessageBean messageBean = new ScmMessageBean();                    
-        
-        //check required paramaters
-        if( issueKey == null || issueKey.equals("") ) {
-            messageBean.setMessage("[Error] Required fields are missing.");
-            return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
-        }
-        
-        //check permissions 
-        String username = userManager.getRemoteUser().getUsername();
-        MutableIssue issue = issueManager.getIssueObject(issueKey.trim().toUpperCase());
-        if( permissionManager.hasPermission(ProjectPermissions.ADMINISTER_PROJECTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
-            messageBean.setMessage("[Error] Permission denied. Project administrators only.");
-            return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
-        }
-        
-        ScmActivityServiceImpl.getInstance().deleteScmActivity(issueKey);
-        
-        return Response.status(Status.NO_CONTENT).build();
-    }
+    }            
     
     
     /**
@@ -631,18 +598,19 @@ public class ScmActivityResource {
     }
     
     /**
-     * Rest method to remove SCM Job Links
+     * Rest method to remove SCM activity affected file
      * @version 2.0
      * @param changeType
      * @param issueKey
      * @param changeId
+     * @param fileId
      * @return
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/joblinks/unset/by/{changeType}/{issueKey}/{changeId}")
+    @Path("/activity/file/unset/by/{changeType}/{issueKey}/{changeId}/{fileId}")
     public Response removeScmJobLinks(@PathParam("changeType") String changeType, @PathParam("issueKey") String issueKey, 
-            @PathParam("changeId") String changeId) {
+            @PathParam("changeId") String changeId, @PathParam("fileId") long fileId) {
         
         LOGGER.debug("processing rest get request /joblinks/"+ changeType + "/" + issueKey + "/"+ changeId);
         
@@ -675,8 +643,8 @@ public class ScmActivityResource {
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
         
-        ScmJobServiceImpl.getInstance()
-                .deleteScmJobs(issueKey, changeId, changeType);
+        ScmFileServiceImpl.getInstance()
+                .deleteScmFile(issueKey, changeId, changeType, fileId);
                 
         return Response.status(Status.NO_CONTENT).build();
     }
@@ -703,7 +671,7 @@ public class ScmActivityResource {
             
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
-            ApplicationUser checkedInUser = null;
+            User checkedInUser = null;
         
             if( notifyAs != null || !"".equals(notifyAs)) {
                 checkedInUser = userUtil.getUser(notifyAs);

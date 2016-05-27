@@ -5,6 +5,7 @@
  */
 package com.tseg.jira.scmactivity.dao.impl;
 
+import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.user.ApplicationUser;
 import com.tseg.jira.scmactivity.dao.ScmActivityDB;
 import java.sql.SQLException;
@@ -183,28 +184,36 @@ public class ScmActivityServiceImpl implements ScmActivityService {
             long scmActivityID = ScmActivityServiceImpl.getInstance()
                     .getScmActivityID(issueKey, changeId, changeType, connection);
             
-            if( scmActivityID == 0 ) {
-                messageBean.setId(result);
-                messageBean.setMessage("[Error] Scm "+changeType+" Id ["+changeId+"] "
-                        + "not exists on issue key ["+issueKey+"].");
-            } else {
-                
-                //delete associated message
-                ScmMessageServiceImpl.getInstance().deleteScmMessage(scmActivityID, connection);
-                
-                //delete associated jobs
-                ScmJobServiceImpl.getInstance().deleteScmJobs(scmActivityID, connection);
-                
-                //delete associated files
-                ScmFileServiceImpl.getInstance().deleteScmFiles(scmActivityID, connection);
+            if( scmActivityID > 0 ) {                                
                 
                 String QUERY = "DELETE FROM scm_activity WHERE ID=?";
                 statement = connection.prepareStatement(QUERY);
                 statement.setLong(1, scmActivityID);
                 result=statement.executeUpdate();
-                messageBean.setId( result );
-                messageBean.setMessage("[Info] "+ changeType +" > "
-                        + changeId +" > "+issueKey+" activity is deleted.");
+                
+                if( result == 1 ) { //now go ahead further                    
+                    messageBean.setId(result);
+                    messageBean.setMessage("[Info] "+ changeType +" > "
+                            + changeId +" > "+issueKey+" activity is deleted.");
+                    
+                    //delete associated files
+                    ScmFileServiceImpl.getInstance()
+                        .deleteScmFiles(scmActivityID, connection);
+                    
+                    //delete associated message
+                    ScmMessageServiceImpl.getInstance()
+                        .deleteScmMessage(scmActivityID, connection);
+                
+                    //delete associated jobs
+                    ScmJobServiceImpl.getInstance()
+                        .deleteScmJobs(scmActivityID, connection);
+                                    
+                }
+                
+            } else {
+                messageBean.setId(result);
+                messageBean.setMessage("[Error] Scm "+changeType+" Id ["+changeId+"] "
+                        + "not exists on issue key ["+issueKey+"].");
             }
         }
         catch (SQLException ex) {
@@ -223,45 +232,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
             }
         }
         return messageBean;
-    }
-    
-    
-    /**
-     * Method to delete SCM Activities
-     * @param issueKey 
-     * @return  
-     */
-    
-    @Override
-    public ScmMessageBean deleteScmActivity(String issueKey) {
-        ScmMessageBean messageBean = new ScmMessageBean();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        int result = 0;
-        
-        try {
-            connection = ScmActivityDB.getInstance().getConnection();
-            String QUERY = "DELETE FROM scm_activity WHERE issueKey=?";
-            statement = connection.prepareStatement(QUERY);
-            statement.setString(1, issueKey);
-            result = statement.executeUpdate();
-            
-            messageBean.setId(result);
-            messageBean.setMessage("[Info] Scm Activities is deleted for issue key ["+ issueKey +"].");
-        }
-        catch(SQLException ex) {
-            LOGGER.error(ex);
-        }
-        finally{
-            try {
-                if( statement != null ) statement.close();
-                if( connection != null ) connection.close();
-            } catch (SQLException ex) {
-                LOGGER.error(ex);
-            }
-        }
-        return messageBean;
-    }
+    }        
     
 
     /**
@@ -360,7 +331,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
             resultSet = statement.executeQuery();
             if( resultSet.next() ){
                 scmActivityID = resultSet.getLong("ID");
-                LOGGER.debug("SCM ID is found returning now - "+ scmActivityID);
+                LOGGER.debug("SCM ID is found returning now: "+ scmActivityID);
             }
         }
         catch(SQLException ex) {
@@ -433,7 +404,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
 
 
                     if( "git".equals(scmBean.getChangeType()) ) {
-                        ApplicationUser user = ScmActivityUtils.getInstance().getJiraAuthor4Git(scmBean.getChangeAuthor());
+                        User user = ScmActivityUtils.getInstance().getJiraAuthor4Git(scmBean.getChangeAuthor());
                         if( user != null ) {
                             scmBean.setChangeAuthor(user.getName());
                             scmBean.setJiraAuthor(user.getDisplayName());
@@ -542,10 +513,11 @@ public class ScmActivityServiceImpl implements ScmActivityService {
     
 
     @Override
-    public ScmActivityNotifyBean getScmActivityToNotify(String issueKey, String changeId, String changeType) {        
+    public ScmActivityNotifyBean getScmActivityToNotify(String issueKey, String changeId, String changeType) {
+        ScmActivityNotifyBean scmBean = null;
         ScmActivityBean activity = getScmActivity(issueKey, changeId, changeType);
         if( activity != null ) {
-            ScmActivityNotifyBean scmBean = new ScmActivityNotifyBean();
+            scmBean = new ScmActivityNotifyBean();
             scmBean.setId(activity.getId());
             scmBean.setIssueKey(activity.getIssueKey());
             scmBean.setChangeId(activity.getChangeId());
@@ -592,10 +564,8 @@ public class ScmActivityServiceImpl implements ScmActivityService {
                 }
                 scmBean.setJobs(changeJobs);
             }
-            
-            return scmBean;
         }
-        return null;
+        return scmBean;
     }
     
     
@@ -614,6 +584,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
         
         try {
             connection = ScmActivityDB.getInstance().getConnection();
+            
             String s = "%"+stext+"%";
             String QUERY = "SELECT t1.issueKey AS issueKey FROM scm_activity t1 LEFT JOIN scm_message t2 ON t1.ID=t2.scmActivityID "
                 + "LEFT JOIN scm_files t3 ON t1.ID=t3.scmActivityID LEFT JOIN scm_job t4 ON t1.ID=t4.scmActivityID WHERE "
@@ -679,6 +650,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
         
         try {
             connection = ScmActivityDB.getInstance().getConnection();
+            
             String sauthor = "%"+changeAuthor+"%";
             String stype = "%"+changeType+"%";
             String s = "%"+stext+"%";

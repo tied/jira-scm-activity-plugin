@@ -36,8 +36,8 @@ public class ScmActivityOptionAction extends JiraWebActionSupport {
             LOGGER.debug("jira event id -> "+ optionBean.getJira_event_id());
             LOGGER.debug("jira expand count -> "+ optionBean.getExpand_count());
             try {
-                ScmActivityDB.customEventId = Long.parseLong(optionBean.getJira_event_id());
-                ScmActivityDB.expandCount = Long.parseLong(optionBean.getExpand_count());
+                ScmActivityDB.customEventId = Integer.parseInt(optionBean.getJira_event_id());
+                ScmActivityDB.expandCount = Integer.parseInt(optionBean.getExpand_count());
                 status="Saved!";
             }
             catch (NumberFormatException e){

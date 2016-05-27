@@ -6,6 +6,7 @@ import com.tseg.jira.scmactivity.model.ScmActivityConfigBean;
  * @author vprasad
  */
 public abstract interface ScmActivityConfigMgr {
+    public static final String MAX_ACTIVE = "com.tseg.jira.scmactivity.plugin.max_active";
     public static final String DB_DRIVER = "com.tseg.jira.scmactivity.plugin.db_driver";
     public static final String DB_USER = "com.tseg.jira.scmactivity.plugin.db_user";
     public static final String DB_PASS = "com.tseg.jira.scmactivity.plugin.db_pass";

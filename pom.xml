@@ -21,20 +21,13 @@
     </organization>
 
     <name>SCM Activity For JIRA</name>
-    <description>The main purpose of this plugin to support or integrate JIRA 
-        with all scm change/version control systems( e.g. subversion, git, gerrit, perforce etc.) in the organisations. 
-        This plugin also increases JIRA performance by avoiding comments or change-set history field growth,  
-        since it separates scm change set data from JIRA custom fields.
+    <description>The main purpose of this plugin is to provide an option to store SCM Change data 
+        on the remote database or Cloud, and going forward to integrate JIRA with all SCM systems like 
+        (perforce, git, gerrit and svn etc.) in an organisation with this one add-on.
     </description>   
     <packaging>atlassian-plugin</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <version>2.1.1</version>
-            <scope>compile</scope>
-        </dependency>
+    <dependencies>        
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-api</artifactId>
@@ -99,7 +92,7 @@
     </build>
 
     <properties>
-        <jira.version>7.1.4</jira.version>
+        <jira.version>6.4.11</jira.version>
         <amps.version>5.0.3</amps.version>
         <plugin.testrunner.version>1.2.0</plugin.testrunner.version>
 	<!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->

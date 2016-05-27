@@ -8,8 +8,7 @@ public class ScmActivityConfigBean {
     private String db_pass;
     private String db_driver;
     private String db_url;
-    //private String jira_event_id;
-    //private String expand_count;
+    private String max_active;
 
     public String getDb_user() {
         return db_user;
@@ -43,20 +42,12 @@ public class ScmActivityConfigBean {
         this.db_url = db_url;
     }
 
-    /*public String getJira_event_id() {
-        return jira_event_id;
+    public String getMax_active() {
+        return max_active;
     }
 
-    public void setJira_event_id(String jira_event_id) {
-        this.jira_event_id = jira_event_id;
-    }
-
-    public String getExpand_count() {
-        return expand_count;
-    }
-
-    public void setExpand_count(String expand_count) {
-        this.expand_count = expand_count;
-    }*/
+    public void setMax_active(String max_active) {
+        this.max_active = max_active;
+    }    
     
 }
