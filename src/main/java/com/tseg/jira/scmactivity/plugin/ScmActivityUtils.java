@@ -1,9 +1,9 @@
 package com.tseg.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.renderer.wiki.WikiRendererFactory;
-//import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.renderer.RenderContext;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -60,7 +60,7 @@ public class ScmActivityUtils {
     }
     
     public String getJiraAuthor(String changeAuthor) {
-        User user = ComponentAccessor.getUserManager().getUser(changeAuthor);
+        ApplicationUser user = ComponentAccessor.getUserManager().getUserByKey(changeAuthor);
         if( user != null ) {
             return user.getDisplayName();
         }
@@ -68,16 +68,16 @@ public class ScmActivityUtils {
     }
     
     public String getJiraAuthor2(String changeAuthor) {
-        User user = ComponentAccessor.getUserManager().getUser(changeAuthor);
+        ApplicationUser user = ComponentAccessor.getUserManager().getUserByKey(changeAuthor);
         if( user != null ) {
             return user.getDisplayName();
         }
         return changeAuthor;
     }
     
-    public User getJiraAuthor4Git(String changeAuthorEmail) {    
-        User user = null;
-        for(User iUser : ComponentAccessor.getUserManager().getUsers()) {
+    public ApplicationUser getJiraAuthor4Git(String changeAuthorEmail) {    
+        ApplicationUser user = null;
+        for(ApplicationUser iUser : ComponentAccessor.getUserManager().getUsers()) {
             if(changeAuthorEmail.equalsIgnoreCase(iUser.getEmailAddress())) {                            
                 user = iUser;
                 break;

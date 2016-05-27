@@ -1,9 +1,9 @@
 package com.tseg.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.plugin.issuetabpanel.AbstractIssueAction;
 import com.atlassian.jira.plugin.issuetabpanel.IssueTabPanelModuleDescriptor;
-//import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.ApplicationUser;
 import com.tseg.jira.scmactivity.model.ScmFileBean;
 import com.tseg.jira.scmactivity.model.ScmJobBean;
 import java.util.Date;
@@ -153,7 +153,8 @@ public class ScmActivityAction extends AbstractIssueAction {
         map.put("jiraAuthor", ScmActivityUtils.getInstance().getJiraAuthor(changeAuthor));
         
         if("git".equals(changeType)) {
-            User user = ScmActivityUtils.getInstance().getJiraAuthor4Git(changeAuthor);
+            ApplicationUser user = ScmActivityUtils.getInstance()
+                    .getJiraAuthor4Git(changeAuthor);
             if( user != null ) {
                 map.put("changeAuthor", user.getName());
                 map.put("jiraAuthor", user.getDisplayName());
