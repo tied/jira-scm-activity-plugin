@@ -12,7 +12,8 @@ import com.tseg.jira.scmactivity.config.ScmActivityOptionMgr;
 import com.tseg.jira.scmactivity.model.ScmMessageBean;
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.dbcp.BasicDataSource;
+//import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
 /**
@@ -67,7 +68,16 @@ public class ScmActivityDB {
             dataSource.setPassword(db_pass);
             
             //standard settings
-            dataSource.setInitialSize(10);
+            dataSource.setMaxActive(maxActive); 
+            dataSource.setMaxWait(30000);
+            dataSource.setMaxIdle(20);
+            dataSource.setValidationQuery("select 1");
+            dataSource.setValidationQueryTimeout(3);
+            dataSource.setRemoveAbandoned(true);
+            dataSource.setRemoveAbandonedTimeout(300);
+            dataSource.setTestWhileIdle(true);
+            
+            /**dataSource.setInitialSize(10);
             dataSource.setMaxTotal(maxActive);
             dataSource.setMaxIdle(20);
             dataSource.setMaxWaitMillis(30000);
@@ -75,7 +85,7 @@ public class ScmActivityDB {
             dataSource.setValidationQueryTimeout(3);
             dataSource.setRemoveAbandonedTimeout(300);
             dataSource.setRemoveAbandonedOnMaintenance(true);
-            dataSource.setTestWhileIdle(true);
+            dataSource.setTestWhileIdle(true);*/
         }
         
         if( jira_event_id != null && !"".equals(jira_event_id) ){

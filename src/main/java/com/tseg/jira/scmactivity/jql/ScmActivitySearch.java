@@ -1,5 +1,6 @@
 package com.tseg.jira.scmactivity.jql;
 
+import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.JiraDataType;
 import com.atlassian.jira.JiraDataTypes;
 import com.atlassian.jira.issue.Issue;
@@ -8,7 +9,7 @@ import com.atlassian.jira.jql.operand.QueryLiteral;
 import com.atlassian.jira.jql.query.QueryCreationContext;
 import com.atlassian.jira.jql.util.JqlDateSupport;
 import com.atlassian.jira.plugin.jql.function.AbstractJqlFunction;
-import com.atlassian.jira.user.ApplicationUser;
+//import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.query.clause.TerminalClause;
 import com.atlassian.query.operand.FunctionOperand;
@@ -31,7 +32,7 @@ public class ScmActivitySearch extends AbstractJqlFunction {
     }
     
     @Override
-    public MessageSet validate(ApplicationUser user, FunctionOperand operand, TerminalClause tc) {
+    public MessageSet validate(User user, FunctionOperand operand, TerminalClause tc) {
         MessageSet messageSet = validateNumberOfArgs(operand, 7);
         if ( messageSet.hasAnyErrors() ) {
             messageSet.addErrorMessage("The arguments should be in the form (\"Duration\", \"Change Type\", "

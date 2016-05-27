@@ -1,5 +1,6 @@
 package com.tseg.jira.scmactivity.jql;
 
+import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.JiraDataType;
 import com.atlassian.jira.JiraDataTypes;
 import com.atlassian.jira.issue.Issue;
@@ -7,7 +8,7 @@ import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.jql.operand.QueryLiteral;
 import com.atlassian.jira.jql.query.QueryCreationContext;
 import com.atlassian.jira.plugin.jql.function.AbstractJqlFunction;
-import com.atlassian.jira.user.ApplicationUser;
+//import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.query.clause.TerminalClause;
 import com.atlassian.query.operand.FunctionOperand;
@@ -29,7 +30,7 @@ public class ScmSearch extends AbstractJqlFunction {
     }
     
     @Override
-    public MessageSet validate(ApplicationUser user, FunctionOperand operand, TerminalClause tc) {
+    public MessageSet validate(User user, FunctionOperand operand, TerminalClause tc) {
         MessageSet messageSet = validateNumberOfArgs(operand, 1);
         if ( messageSet.hasAnyErrors() ) {
             messageSet.addErrorMessage("scmSearch (\"The Change Search Text\")");
