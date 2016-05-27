@@ -183,7 +183,8 @@ public class ScmActivityResource {
             ScmActivityNotifyBean scmActivity = scmActivityService.getScmActivityToNotify(issueKey, changeId, changeType);
             if(scmActivity != null) {                
                 long customEventId = ScmActivityDB.customEventId;
-                if( customEventId != 0 ) {
+                LOGGER.debug("Custom Notification Event ID is - "+ customEventId);
+                if( customEventId > 0 ) {
                     fireCustomNotifyEvent(scmActivity, customEventId, "");
                 }
             }
@@ -667,18 +668,19 @@ public class ScmActivityResource {
             long customEventId, String notifyAs) {    
         
         if ( ComponentAccessor.getEventTypeManager().isEventTypeExists(customEventId) ) { //send email
+            LOGGER.debug("Custom Notification Event ID ["+customEventId+"] exists.");
             
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
             ApplicationUser checkedInUser = null;
         
             if( notifyAs != null || !"".equals(notifyAs)) {
-                checkedInUser = userUtil.getUser(notifyAs);
+                checkedInUser = userUtil.getUserByKey(notifyAs);
             } else {
                 if("git".equals(activityBean.getChangeType())) {
                     checkedInUser = ScmActivityUtils.getInstance().getJiraAuthor4Git(activityBean.getChangeAuthor());
                 } else {
-                    checkedInUser = userUtil.getUser(activityBean.getChangeAuthor());
+                    checkedInUser = userUtil.getUserByKey(activityBean.getChangeAuthor());
                 }
             }
         
@@ -688,7 +690,7 @@ public class ScmActivityResource {
                 LOGGER.debug("change user("+activityBean.getChangeAuthor()+")/notifyas user("+notifyAs+") is not exists! "
                         + "so setting remote executing user.");
                 
-                checkedInUser = userUtil.getUser(userManager.getRemoteUser().getUsername());
+                checkedInUser = userUtil.getUserByKey(userManager.getRemoteUser().getUsername());
             } else {
                 activityBean.setJiraAuthor(checkedInUser.getDisplayName());
             }
@@ -701,7 +703,10 @@ public class ScmActivityResource {
             issueEventManager.dispatchEvent(eventBundle);
 
             //issueEventManager.dispatchEvent(customEventId, issue, context, checkedInUser, true); //fire email event
-            LOGGER.debug("Fired an event ["+customEventId+"] for scm id - "+ activityBean.getId());             
+            LOGGER.debug("Fired an event ["+customEventId+"] for scm id - "+ activityBean.getId());
+            
+        } else {
+            LOGGER.debug("Custom Notification Event ID ["+customEventId+"] Not exists.");
         }
     }
         

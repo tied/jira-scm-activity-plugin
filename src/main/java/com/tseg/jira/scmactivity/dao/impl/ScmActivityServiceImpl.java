@@ -268,17 +268,17 @@ public class ScmActivityServiceImpl implements ScmActivityService {
 
             if( resultSet.next() ) {
                 scmBean = new ScmActivityBean();
-                scmBean.setId( resultSet.getLong("ID") );                
-                scmBean.setIssueKey(resultSet.getString("issueKey") );
-                scmBean.setChangeId( resultSet.getString("changeId") );
-                scmBean.setChangeType( resultSet.getString("changeType") );
-                scmBean.setChangeAuthor( resultSet.getString("changeAuthor") );
-                scmBean.setChangeDate( resultSet.getString("changeDate") );
-                scmBean.setChangeBranch( resultSet.getString("changeBranch") );
-                scmBean.setChangeTag( resultSet.getString("changeTag") );
-                scmBean.setChangeStatus( resultSet.getString("changeStatus") );
-                scmBean.setChangeLink( resultSet.getString("changeLink") );
-                scmBean.setChangeMessage(scmBean.getChangeMessage());
+                scmBean.setId(resultSet.getLong("ID"));                
+                scmBean.setIssueKey(resultSet.getString("issueKey"));
+                scmBean.setChangeId(resultSet.getString("changeId"));
+                scmBean.setChangeType(resultSet.getString("changeType"));
+                scmBean.setChangeAuthor(resultSet.getString("changeAuthor"));
+                scmBean.setChangeDate(resultSet.getString("changeDate"));
+                scmBean.setChangeBranch(resultSet.getString("changeBranch"));
+                scmBean.setChangeTag(resultSet.getString("changeTag"));
+                scmBean.setChangeStatus(resultSet.getString("changeStatus"));
+                scmBean.setChangeLink(resultSet.getString("changeLink"));
+                scmBean.setChangeMessage(resultSet.getString("changeMessage"));
                                                 
                 //look for if any change files
                 List<ScmFileBean> files = ScmFileServiceImpl.getInstance().getScmFiles(scmBean.getId(), connection);
@@ -516,6 +516,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
         ScmActivityNotifyBean scmBean = null;
         ScmActivityBean activity = getScmActivity(issueKey, changeId, changeType);
         if( activity != null ) {
+            
             scmBean = new ScmActivityNotifyBean();
             scmBean.setId(activity.getId());
             scmBean.setIssueKey(activity.getIssueKey());
@@ -527,42 +528,20 @@ public class ScmActivityServiceImpl implements ScmActivityService {
             scmBean.setChangeTag(activity.getChangeTag());
             scmBean.setChangeStatus(activity.getChangeStatus());
             scmBean.setChangeLink(activity.getChangeLink());
+            scmBean.setChangeFiles(activity.getChangeFiles());
+            scmBean.setJobs(activity.getJobs());
+            scmBean.setChangeMsgNonWiki(activity.getChangeMessage());
+            scmBean.setChangeMessage(ScmActivityUtils.getInstance()
+                    .getWikiText(activity.getChangeMessage()));
             
-            //message
-            if(activity.getChangeMessage()!=null) {
-                scmBean.setChangeMessage( ScmActivityUtils.getInstance()
-                        .getWikiText(activity.getChangeMessage()) );
-                
-                scmBean.setChangeMsgNonWiki(activity.getChangeMessage());
-            }
-            
-            //affected files
-            if( activity.getChangeFiles().size() > 0 ) {
-                List<ScmFileBean> changeFiles = new ArrayList<ScmFileBean>();
-                for(ScmFileBean file : activity.getChangeFiles()){
-                    ScmFileBean fileBean = new ScmFileBean();
-                    fileBean.setId(file.getId());
-                    fileBean.setFileName(file.getFileName());
-                    fileBean.setFileAction(file.getFileAction());
-                    fileBean.setFileVersion(file.getFileVersion());
-                    changeFiles.add(fileBean);
+            /*scmBean.setJiraAuthor(ScmActivityUtils.getInstance().getJiraAuthor(activity.getChangeAuthor()));
+            if( "git".equals(scmBean.getChangeType()) ) {
+                ApplicationUser user = ScmActivityUtils.getInstance().getJiraAuthor4Git(scmBean.getChangeAuthor());
+                if( user != null ) {
+                    scmBean.setChangeAuthor(user.getName());
+                    scmBean.setJiraAuthor(user.getDisplayName());
                 }
-                scmBean.setChangeFiles(changeFiles);
-            }
-            
-            //jobs
-            if( activity.getJobs().size() > 0 ) {
-                List<ScmJobBean> changeJobs = new ArrayList<ScmJobBean>();
-                for(ScmJobBean job : activity.getJobs()){
-                    ScmJobBean jobBean = new ScmJobBean();
-                    jobBean.setId(job.getId());
-                    jobBean.setJobName(job.getJobName());
-                    jobBean.setJobStatus(job.getJobStatus());
-                    jobBean.setJobLink(job.getJobLink());
-                    changeJobs.add(jobBean);
-                }
-                scmBean.setJobs(changeJobs);
-            }
+            }*/
         }
         return scmBean;
     }
