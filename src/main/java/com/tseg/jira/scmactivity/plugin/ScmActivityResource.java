@@ -183,9 +183,9 @@ public class ScmActivityResource {
             ScmActivityNotifyBean scmActivity = scmActivityService.getScmActivityToNotify(issueKey, changeId, changeType);
             if(scmActivity != null) {                
                 long customEventId = ScmActivityDB.customEventId;
-                LOGGER.debug("Custom Notification Event ID is - "+ customEventId);
+                LOGGER.debug("Custom Notification Event ID ["+ customEventId+"]");
                 if( customEventId > 0 ) {
-                    fireCustomNotifyEvent(scmActivity, customEventId, "");
+                    fireCustomNotifyEvent(scmActivity, customEventId, null);
                 }
             }
             return Response.ok("DONE").build();
@@ -668,18 +668,17 @@ public class ScmActivityResource {
             long customEventId, String notifyAs) {    
         
         if ( ComponentAccessor.getEventTypeManager().isEventTypeExists(customEventId) ) { //send email
-            LOGGER.debug("Custom Notification Event ID ["+customEventId+"] exists.");
             
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
             ApplicationUser checkedInUser = null;
-        
-            if( notifyAs != null || !"".equals(notifyAs)) {
+            
+            if( notifyAs != null && !"".equals(notifyAs)) {
                 checkedInUser = userUtil.getUserByKey(notifyAs);
             } else {
                 if("git".equals(activityBean.getChangeType())) {
                     checkedInUser = ScmActivityUtils.getInstance().getJiraAuthor4Git(activityBean.getChangeAuthor());
-                } else {
+                } else {                    
                     checkedInUser = userUtil.getUserByKey(activityBean.getChangeAuthor());
                 }
             }
@@ -706,7 +705,7 @@ public class ScmActivityResource {
             LOGGER.debug("Fired an event ["+customEventId+"] for scm id - "+ activityBean.getId());
             
         } else {
-            LOGGER.debug("Custom Notification Event ID ["+customEventId+"] Not exists.");
+            LOGGER.debug("Custom Notification Event ID ["+customEventId+"] not exists.");
         }
     }
         
