@@ -10,7 +10,7 @@
     list-style-type: circle;
 }
 
-#subversion, #svn {
+#subversion {
     background-image: url('images/svn.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -21,7 +21,7 @@
     background-position: 50% 50%;
 }
 
-#ucm, #clearcase, #cc {
+#clearcase {
     background-image: url('images/clearcase.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -54,7 +54,7 @@
     background-position: 50% 50%;
 }
 
-#ic-manage, #ic {
+#ic-manage {
     background-image: url('images/icmanage.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -87,7 +87,7 @@
     background-position: 50% 50%;
 }
 
-#perforce, #p4 {
+#perforce {
     background-image: url('images/p4.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -98,7 +98,7 @@
     background-position: 50% 50%;
 }
 
-#collaborator, #coco {
+#collaborator {
     background-image: url('images/collaborator.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -131,7 +131,7 @@
     background-position: 50% 50%;
 }
 
-#electric-cloud, #ec {
+#electric-cloud {
     background-image: url('images/commander.png');
     background-repeat: no-repeat;
     background-size: 100%;

@@ -1,24 +1,42 @@
 #disable_html_escaping()
 #if( $value )
 
-#if( $value.changeType.toLowerCase().contains('subversion') || $value.changeType.toLowerCase().contains('svn') 
-    || $value.changeType.toLowerCase().contains('git') )
+#if( $value.changeType.toLowerCase().startsWith('subversion') || $value.toLowerCase().changeType.startsWith('svn') )
     #set( $myChange = "Revision" )
-#elseif ( $value.changeType.toLowerCase().contains('collaborator') || $value.changeType.toLowerCase().contains('coco') 
-    || $value.changeType.toLowerCase().contains('swarm') )
+    #set( $myChangeLogo = "subversion" )
+#elseif( $value.changeType.toLowerCase().startsWith('git') )
+    #set( $myChange = "Revision" )
+    #set( $myChangeLogo = "git" )
+#elseif ( $value.changeType.startsWith('collaborator') || $value.changeType.toLowerCase().startsWith('coco') )
     #set( $myChange = "Review" )
-#elseif ( $value.changeType.toLowerCase().contains('perforce') || $value.changeType.toLowerCase().contains('p4')
-    || $value.changeType.toLowerCase().contains('gerrit') )
+    #set( $myChangeLogo = "collaborator" )
+#elseif( $value.changeType.toLowerCase().startsWith('swarm') )
+    #set( $myChange = "Review" )
+    #set( $myChangeLogo = "swarm" )
+#elseif(  $value.changeType.toLowerCase().startsWith('clearcase') || $value.changeType.toLowerCase().startsWith('cc') 
+    || $value.changeType.toLowerCase().startsWith('ucm') )
+    #set( $myChange = "Version" )
+    #set( $myChangeLogo = "clearcase" )
+#elseif(  $value.changeType.toLowerCase().startsWith('electric-cloud') || $value.changeType.toLowerCase().startsWith('ec') )
+    #set( $myChange = "Integration" )
+    #set( $myChangeLogo = "electric-cloud" )
+#elseif(  $value.changeType.toLowerCase().startsWith('jenkins') )
+    #set( $myChange = "Integration" )
+    #set( $myChangeLogo = "jenkins" )
+#elseif ( $value.changeType.toLowerCase().startsWith('perforce') || $value.changeType.toLowerCase().startsWith('p4') )
     #set( $myChange = "Change" )
+    #set( $myChangeLogo = "perforce" )
+#elseif( $value.changeType.toLowerCase().startsWith('gerrit') )
+    #set( $myChange = "Change" )
+    #set( $myChangeLogo = "gerrit" )
 #else
     #set( $myChange = "Integration" )
+    #set( $myChangeLogo = "scm" )
 #end
-
-#set( $changeTypeId = $value.changeType.toLowerCase().replaceAll("[-_]\S+","") )
 
 ## Main action detail
 <div class="action-details">
-    <div id="$changeTypeId" title="$value.changeType integration"></div>
+    <div id="$myChangeLogo" title="$value.changeType integration"></div>
     $myChange  
     #if ( $!value.changeLink && $!value.changeLink != "" ) 
         <a href="$value.changeLink" target="_blank">$value.changeId</a>

@@ -1,19 +1,37 @@
 #disable_html_escaping()
 
-#if( $changeType.toLowerCase().contains('subversion') || $changeType.toLowerCase().contains('svn') 
-    || $changeType.toLowerCase().contains('git') )
+#if( $changeType.toLowerCase().startsWith('subversion') || $changeType.toLowerCase().startsWith('svn') )
     #set( $myChange = "Revision" )
-#elseif ( $changeType.toLowerCase().contains('collaborator') || $changeType.toLowerCase().contains('coco') 
-    || $changeType.toLowerCase().contains('swarm') )
+    #set( $myChangeLogo = "subversion" )
+#elseif( $changeType.toLowerCase().startsWith('git') )
+    #set( $myChange = "Revision" )
+    #set( $myChangeLogo = "git" )
+#elseif ( $changeType.toLowerCase().startsWith('collaborator') || $changeType.toLowerCase().startsWith('coco') )
     #set( $myChange = "Review" )
-#elseif ( $changeType.toLowerCase().contains('perforce') || $changeType.toLowerCase().contains('p4')
-    || $changeType.toLowerCase().contains('gerrit') )
+    #set( $myChangeLogo = "collaborator" )
+#elseif(  $changeType.toLowerCase().startsWith('swarm') )
+    #set( $myChange = "Review" )
+    #set( $myChangeLogo = "swarm" )
+#elseif(  $changeType.toLowerCase().startsWith('clearcase') || $changeType.toLowerCase().startsWith('cc') 
+    || $changeType.toLowerCase().startsWith('ucm') )
+    #set( $myChange = "Version" )
+    #set( $myChangeLogo = "clearcase" )
+#elseif(  $changeType.toLowerCase().startsWith('electric-cloud') || $changeType.toLowerCase().startsWith('ec') )
+    #set( $myChange = "Integration" )
+    #set( $myChangeLogo = "electric-cloud" )
+#elseif(  $changeType.toLowerCase().startsWith('jenkins') )
+    #set( $myChange = "Integration" )
+    #set( $myChangeLogo = "jenkins" )
+#elseif ( $changeType.toLowerCase().startsWith('perforce') || $changeType.toLowerCase().startsWith('p4') )
     #set( $myChange = "Change" )
+    #set( $myChangeLogo = "perforce" )
+#elseif( $changeType.toLowerCase().startsWith('gerrit') )
+    #set( $myChange = "Change" )
+    #set( $myChangeLogo = "gerrit" )
 #else
     #set( $myChange = "Integration" )
+    #set( $myChangeLogo = "scm" )
 #end
-
-#set( $changeTypeId = $changeType.toLowerCase().replaceAll("[-_]\S+","") )
 
 #set( $openClass = "collapsed" )
 #if ( $headerVis )
@@ -30,7 +48,7 @@
         </a>
 
         <div class="action-details flooded">
-            <div id="$changeTypeId" title="$changeType integration"></div>
+            <div id="$myChangeLogo" title="$changeType integration"></div>
             $myChange 
             #if ( $!changeLink && $!changeLink != "" ) 
                 <a href="$changeLink" target="_blank">$changeId</a>
@@ -68,7 +86,7 @@
 
         ## Main action detail
         <div class="action-details">
-            <div id="$changeTypeId" title="$changeType integration"></div>
+            <div id="$myChangeLogo" title="$changeType integration"></div>
             $myChange  
             #if ( $!changeLink && $!changeLink != "" ) 
                 <a href="$changeLink" target="_blank">$changeId</a>

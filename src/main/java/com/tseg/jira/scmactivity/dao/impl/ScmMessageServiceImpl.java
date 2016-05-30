@@ -64,7 +64,7 @@ public class ScmMessageServiceImpl implements ScmMessageService {
                     
                     messageBean.setId(result);
                     messageBean.setMessage("[Info] activity message row ["+scmMessage.getId()+"] is updated.");
-                }
+                }                
             } 
         } catch (SQLException ex) {
             LOGGER.error(ex.getLocalizedMessage());
@@ -89,6 +89,10 @@ public class ScmMessageServiceImpl implements ScmMessageService {
                         activityBean.getChangeType(), connection);
         if( scmActivityID > 0 ) {
             messageBean = setScmMessage(activityBean.getChangeMessage(), scmActivityID, connection);
+        } else {
+            messageBean.setId(0);
+            messageBean.setMessage("[Error] "+activityBean.getChangeType()+" Id ["+activityBean.getChangeId()+"] not "
+                        + "exists on issue key ["+activityBean.getIssueKey()+"].");
         }
         try {
             if( connection != null ) connection.close();

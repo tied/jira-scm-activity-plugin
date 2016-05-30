@@ -1,6 +1,6 @@
 package com.tseg.jira.scmactivity.plugin;
 
-//import com.atlassian.crowd.embedded.api.User;
+import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.tabpanels.GenericMessageAction;
 import com.atlassian.jira.plugin.issuetabpanel.AbstractIssueTabPanel;
@@ -21,7 +21,7 @@ public class ScmActivityTabPanel extends AbstractIssueTabPanel {
     private static final Logger LOGGER = Logger.getLogger(ScmActivityTabPanel.class);
     
     @Override
-    public List getActions(Issue issue, ApplicationUser user) {
+    public List getActions(Issue issue, User user) {
         
         List<ScmActivityAction> activities = new ArrayList<ScmActivityAction>();
         
@@ -67,7 +67,7 @@ public class ScmActivityTabPanel extends AbstractIssueTabPanel {
     }
 
     @Override
-    public boolean showPanel(Issue issue, ApplicationUser au) {
+    public boolean showPanel(Issue issue, User au) {
         return true;
     }
     

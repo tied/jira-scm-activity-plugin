@@ -89,6 +89,10 @@ public class ScmFileServiceImpl implements ScmFileService {
                         activityBean.getChangeType(), connection);
         if( scmActivityID > 0 ) {
             messageBean = setScmFiles(activityBean.getChangeFiles(), scmActivityID, connection);
+        } else {
+            messageBean.setId(0);
+            messageBean.setMessage("[Error] "+activityBean.getChangeType()+" Id ["+activityBean.getChangeId()+"] not "
+                        + "exists on issue key ["+activityBean.getIssueKey()+"].");
         }
         try {
             if( connection != null ) connection.close();
