@@ -1,6 +1,6 @@
 package com.tseg.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.tseg.jira.scmactivity.model.ScmActivityNotifyBean;
 import com.tseg.jira.scmactivity.model.ScmChangeSetBean;
 import com.tseg.jira.scmactivity.model.ScmJobLinkBean;
@@ -678,16 +678,16 @@ public class ScmActivityResource {
             
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
-            User checkedInUser = null;
-            //ApplicationUser checkedInUser = null;
+            //User checkedInUser = null;
+            ApplicationUser checkedInUser = null;
             
             if( notifyAs != null && !"".equals(notifyAs)) {
-                checkedInUser = userUtil.getUser(notifyAs);
+                checkedInUser = userUtil.getUserByKey(notifyAs);
             } else {
                 if("git".equals(activityBean.getChangeType())) {
                     checkedInUser = ScmActivityUtils.getInstance().getJiraAuthor4Git(activityBean.getChangeAuthor());
                 } else {                    
-                    checkedInUser = userUtil.getUser(activityBean.getChangeAuthor());
+                    checkedInUser = userUtil.getUserByKey(activityBean.getChangeAuthor());
                 }
             }
         
@@ -697,7 +697,7 @@ public class ScmActivityResource {
                 LOGGER.debug("change user("+activityBean.getChangeAuthor()+")/notifyas user("+notifyAs+") is not exists! "
                         + "so setting remote executing user.");
                 
-                checkedInUser = userUtil.getUser(userManager.getRemoteUser().getUsername());
+                checkedInUser = userUtil.getUserByKey(userManager.getRemoteUser().getUsername());
             } else {
                 activityBean.setJiraAuthor(checkedInUser.getDisplayName());
             }

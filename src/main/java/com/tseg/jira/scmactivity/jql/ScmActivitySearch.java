@@ -1,6 +1,6 @@
 package com.tseg.jira.scmactivity.jql;
 
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.JiraDataType;
 import com.atlassian.jira.JiraDataTypes;
 import com.atlassian.jira.issue.Issue;
@@ -32,7 +32,7 @@ public class ScmActivitySearch extends AbstractJqlFunction {
     }
     
     @Override
-    public MessageSet validate(User user, FunctionOperand operand, TerminalClause tc) {
+    public MessageSet validate(ApplicationUser user, FunctionOperand operand, TerminalClause tc) {
         MessageSet messageSet = validateNumberOfArgs(operand, 7);
         if ( messageSet.hasAnyErrors() ) {
             messageSet.addErrorMessage("The arguments should be in the form (\"Duration\", \"Change Type\", "

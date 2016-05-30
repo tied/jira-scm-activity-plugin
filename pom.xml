@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tseg.jira.scmactivity.plugin</groupId>
     <artifactId>jira-scm-activity-plugin</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
     <developers>
         <developer> 
             <name>Venkat Prasad</name> 
@@ -27,7 +27,13 @@
     </description>   
     <packaging>atlassian-plugin</packaging>
 
-    <dependencies>        
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.1</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-api</artifactId>
@@ -92,7 +98,7 @@
     </build>
 
     <properties>
-        <jira.version>6.4.11</jira.version>
+        <jira.version>7.1.4</jira.version>
         <amps.version>5.0.3</amps.version>
         <plugin.testrunner.version>1.2.0</plugin.testrunner.version>
 	<!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->
