@@ -10,7 +10,7 @@
     list-style-type: circle;
 }
 
-#subversion {
+#subversion, #svn {
     background-image: url('images/svn.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -21,7 +21,7 @@
     background-position: 50% 50%;
 }
 
-#clearcase-ucm {
+#ucm, #clearcase, #cc {
     background-image: url('images/clearcase.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -43,8 +43,8 @@
     background-position: 50% 50%;
 }
 
-#anonymous {
-    background-image: url('images/anonymous.png');
+#scm {
+    background-image: url('images/scm.png');
     background-repeat: no-repeat;
     background-size: 100%;
     width: 14px;
@@ -54,7 +54,7 @@
     background-position: 50% 50%;
 }
 
-#ic-manage {
+#ic-manage, #ic {
     background-image: url('images/icmanage.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -87,7 +87,7 @@
     background-position: 50% 50%;
 }
 
-#perforce {
+#perforce, #p4 {
     background-image: url('images/p4.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -98,18 +98,7 @@
     background-position: 50% 50%;
 }
 
-#clearcase {
-    background-image: url('images/clearcase.png');
-    background-repeat: no-repeat;
-    background-size: 100%;
-    width: 16px;
-    height: 16px;
-    display: inline-block;
-    vertical-align: middle;
-    background-position: 50% 50%;
-}
-
-#collaborator {
+#collaborator, #coco {
     background-image: url('images/collaborator.png');
     background-repeat: no-repeat;
     background-size: 100%;
@@ -142,18 +131,7 @@
     background-position: 50% 50%;
 }
 
-#perforce-software {
-    background-image: url('images/perforcesoftware.png');
-    background-repeat: no-repeat;
-    background-size: 100%;
-    width: 16px;
-    height: 16px;
-    display: inline-block;
-    vertical-align: middle;
-    background-position: 50% 50%;
-}
-
-#commander {
+#electric-cloud, #ec {
     background-image: url('images/commander.png');
     background-repeat: no-repeat;
     background-size: 100%;

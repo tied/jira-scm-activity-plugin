@@ -1,15 +1,20 @@
 #disable_html_escaping()
 #if( $value )
 
-#if( $value.changeType == "subversion" || $value.changeType == "git" )
+#if( $value.changeType.toLowerCase().contains('subversion') || $value.toLowerCase().changeType.contains('svn') 
+    || $value.changeType.toLowerCase().contains('git') )
     #set( $myChange = "Revision" )
-#elseif ( $value.changeType == "collaborator" || $value.changeType == "swarm" )
+#elseif ( $value.changeType.contains('collaborator') || $value.changeType.toLowerCase().contains('coco') 
+    || $value.changeType.toLowerCase().contains('swarm') )
     #set( $myChange = "Review" )
-#elseif ( $value.changeType == "perforce" || $value.changeType == "gerrit" )
+#elseif ( $value.changeType.toLowerCase().contains('perforce') || $value.changeType.toLowerCase().contains('p4')
+    || $value.changeType.toLowerCase().contains('gerrit') )
     #set( $myChange = "Change" )
 #else
     #set( $myChange = "Integration" )
 #end
+
+#set( $changeTypeId = $value.changeType.toLowerCase().replaceAll("[-_]\S+","") )
 
 <div class="issue-data-block twixi-block">
     ## The concise version:
@@ -21,7 +26,7 @@
         </a>
 
         <div class="action-details flooded">
-            <div id="$value.changeType" title="$value.changeType integration"></div>
+            <div id="$changeTypeId" title="$value.changeType integration"></div>
             $myChange  
             #if ( $!value.changeLink && $!changeLink != "" ) 
                 <a href="$value.changeLink" target="_blank">$value.changeId</a>
@@ -59,7 +64,7 @@
 
         ## Main action detail
         <div class="action-details">
-            <div id="$value.changeType" title="$value.changeType integration"></div>
+            <div id="$changeTypeId" title="$value.changeType integration"></div>
             $myChange  
             #if ( $!value.changeLink && $!value.changeLink != "" ) 
                 <a href="$value.changeLink" target="_blank">$value.changeId</a>

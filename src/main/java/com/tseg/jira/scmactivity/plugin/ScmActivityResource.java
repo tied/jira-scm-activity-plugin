@@ -76,22 +76,20 @@ public class ScmActivityResource {
         this.issueEventBundleFactory = issueEventBundleFactory;
         
         scm_repos = new String[] {  // supported scm systems list
-            "subversion",
-            "perforce",
+            "subversion", "svn",
+            "perforce", "p4",
+            "gerrit",
             "git",
-            "gerrit",            
-            "clearcase",
-            "clearcase-ucm",
-            "ic-manage",
-            "accurev",
-            "collaborator",
             "cvs",
-            "commander",
-            "perforce-software",
+            "clearcase", "cc", "ucm",                 
+            "ic", "ic-manage",
+            "accurev",
+            "collaborator", "coco",            
+            "electric-cloud", "ec",            
             "jenkins",
             "swarm",
-            "anonymous"
-        };        
+            "scm"
+        };
     }
     
     
@@ -171,7 +169,7 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(changeType.equals(repo)) index++;
+            if(changeType.toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported.");
@@ -260,7 +258,7 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(activityBean.getChangeType().equals(repo)) index++;
+            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported.");
@@ -325,7 +323,7 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(activityBean.getChangeType().equals(repo)) index++;
+            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported.");
@@ -396,7 +394,7 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {            
-            if(activityBean.getChangeType().equals(repo)) index++;
+            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
         }        
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported.");
@@ -452,7 +450,7 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(activityBean.getChangeType().equals(repo)) index++;
+            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported.");
@@ -525,7 +523,7 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(changeType.equals(repo)) index++;
+            if(changeType.toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;            
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported.");
@@ -575,8 +573,8 @@ public class ScmActivityResource {
         
         //check change type
         int index = 0;
-        for(String repo : scm_repos) {            
-            if(changeType.equals(repo)) index++;
+        for(String repo : scm_repos) {
+            if(changeType.toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
         }        
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported.");
@@ -628,7 +626,7 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {            
-            if(changeType.equals(repo)) index++;
+            if(changeType.toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
         }        
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported.");

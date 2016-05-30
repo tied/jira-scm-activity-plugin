@@ -1,14 +1,19 @@
 #disable_html_escaping()
 
-#if( $changeType == "subversion" || $changeType == "git" )
+#if( $changeType.toLowerCase().contains('subversion') || $changeType.toLowerCase().contains('svn') 
+    || $changeType.toLowerCase().contains('git') )
     #set( $myChange = "Revision" )
-#elseif ( $changeType == "collaborator" || $changeType == "swarm" )
+#elseif ( $changeType.toLowerCase().contains('collaborator') || $changeType.toLowerCase().contains('coco') 
+    || $changeType.toLowerCase().contains('swarm') )
     #set( $myChange = "Review" )
-#elseif ( $changeType == "perforce" || $changeType == "gerrit" )
+#elseif ( $changeType.toLowerCase().contains('perforce') || $changeType.toLowerCase().contains('p4')
+    || $changeType.toLowerCase().contains('gerrit') )
     #set( $myChange = "Change" )
 #else
     #set( $myChange = "Integration" )
 #end
+
+#set( $changeTypeId = $changeType.toLowerCase().replaceAll("[-_]\S+","") )
 
 #set( $openClass = "collapsed" )
 #if ( $headerVis )
@@ -25,8 +30,8 @@
         </a>
 
         <div class="action-details flooded">
-            <div id="$changeType" title="$changeType integration"></div>
-            $myChange  
+            <div id="$changeTypeId" title="$changeType integration"></div>
+            $myChange 
             #if ( $!changeLink && $!changeLink != "" ) 
                 <a href="$changeLink" target="_blank">$changeId</a>
             #else
@@ -63,7 +68,7 @@
 
         ## Main action detail
         <div class="action-details">
-            <div id="$changeType" title="$changeType integration"></div>
+            <div id="$changeTypeId" title="$changeType integration"></div>
             $myChange  
             #if ( $!changeLink && $!changeLink != "" ) 
                 <a href="$changeLink" target="_blank">$changeId</a>
