@@ -140,7 +140,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
                     
                 } else {
                                         
-                    messageBean.setId(1);
+                    messageBean.setId(result);
                     messageBean.setMessage("[Error] Skipping. There is "+activityBean.getChangeType() +" Id ["+activityBean.getChangeId()+"]"
                         + " already exists on issue key ["+activityBean.getIssueKey()+"].");                    
                 }
