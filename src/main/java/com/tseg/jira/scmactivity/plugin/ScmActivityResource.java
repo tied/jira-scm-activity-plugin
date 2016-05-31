@@ -169,11 +169,11 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(changeType.toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
+            if(changeType.toLowerCase().startsWith(repo)) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
         
@@ -259,11 +259,11 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
+            if(activityBean.getChangeType().toLowerCase().startsWith(repo)) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
         
@@ -325,11 +325,11 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
+            if(activityBean.getChangeType().toLowerCase().startsWith(repo)) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
         
@@ -397,11 +397,11 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {            
-            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
+            if(activityBean.getChangeType().toLowerCase().startsWith(repo)) index++;
         }        
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
         
@@ -454,11 +454,11 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(activityBean.getChangeType().toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
+            if(activityBean.getChangeType().toLowerCase().startsWith(repo)) index++;
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+activityBean.getChangeType()+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
         
@@ -532,7 +532,7 @@ public class ScmActivityResource {
         }
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
         
@@ -580,11 +580,11 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {
-            if(changeType.toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
+            if(changeType.toLowerCase().startsWith(repo)) index++;
         }        
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
         
@@ -633,11 +633,11 @@ public class ScmActivityResource {
         //check change type
         int index = 0;
         for(String repo : scm_repos) {            
-            if(changeType.toLowerCase().matches("^(\\b"+repo+"\\b)([-_]\\S+)?")) index++;
+            if(changeType.toLowerCase().startsWith(repo)) index++;
         }        
         if(index==0) {
             messageBean.setMessage("[Error] Change type ["+changeType+"] is not supported. Define valid change type i.e. "
-                    + "SCM Change Type_team/instance/repo name e.g. git_bluetooth");
+                    + "SCM Change Type_Instance/Repo name e.g. git_engsw");
             return Response.status(Status.BAD_REQUEST).entity(messageBean).build();
         }
                        
@@ -675,7 +675,7 @@ public class ScmActivityResource {
             long customEventId, String notifyAs) {    
         
         if ( ComponentAccessor.getEventTypeManager().isEventTypeExists(customEventId) ) { //send email
-            
+            if( activityBean !=null  ) {
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
             //User checkedInUser = null;
@@ -711,7 +711,7 @@ public class ScmActivityResource {
 
             //issueEventManager.dispatchEvent(customEventId, issue, context, checkedInUser, true); //fire email event
             LOGGER.debug("Fired an event ["+customEventId+"] for scm id - "+ activityBean.getId());
-            
+            }
         } else {
             LOGGER.debug("Custom Notification Event ID ["+customEventId+"] not exists.");
         }

@@ -124,10 +124,10 @@ public class ScmActivitySchema {
     
     private final String SQLITE_SCM_ACTIVITY = "CREATE TABLE IF NOT EXISTS scm_activity ("
             + "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-            + "issueKey VARCHAR(50) NOT NULL,"
-            + "changeId VARCHAR(50) NOT NULL,"
+            + "issueKey VARCHAR(50) NOT NULL COLLATE nocase,"
+            + "changeId VARCHAR(50) NOT NULL COLLATE nocase,"
             + "changeDate VARCHAR(50) NOT NULL,"
-            + "changeAuthor VARCHAR(50) NOT NULL COLLATE nocase,"
+            + "changeAuthor VARCHAR(50) NOT NULL,"
             + "changeLink VARCHAR(255) NULL,"
             + "changeType VARCHAR(50) NOT NULL COLLATE nocase,"
             + "changeBranch VARCHAR(255) NULL,"
