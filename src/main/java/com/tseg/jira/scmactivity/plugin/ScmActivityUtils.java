@@ -34,19 +34,8 @@ public class ScmActivityUtils {
         return scmActivityUtils;
     }
     
-    public Date getDateFromString(String date) {        
-        Date formatedDate = null;
-        try {
-            DateFormat formatter = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");
-            formatedDate = formatter.parse(date);
-        } catch (java.text.ParseException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
-        }
-        return formatedDate;
-    }
-    
-    public Date getUtcDateFromString(String dateStr) {
-        // example:    2011-05-26 10:54:41+xx:xx   (timezone is ignored because we parse utc timestamp date with utc parser)
+    public static Date getDateFromString(String dateStr) {        
+        // example: 2011-05-26 10:54:41+xx:xx (timezone is ignored because we parse utc timestamp date with utc parser)
         try {        
             return DATE_FORMAT.parse(dateStr);
         } catch (ParseException e) {
@@ -67,15 +56,7 @@ public class ScmActivityUtils {
         return "";
     }
     
-    public String getJiraAuthor2(String changeAuthor) {
-        ApplicationUser user = ComponentAccessor.getUserManager().getUserByKey(changeAuthor);
-        if( user != null ) {
-            return user.getDisplayName();
-        }
-        return changeAuthor;
-    }
-    
-    public ApplicationUser getJiraAuthor4Git(String changeAuthorEmail) {    
+    public ApplicationUser getJiraAuthorByEmail(String changeAuthorEmail) {    
         ApplicationUser user = null;
         for(ApplicationUser iUser : ComponentAccessor.getUserManager().getUsers()) {
             if(changeAuthorEmail.equalsIgnoreCase(iUser.getEmailAddress())) {                            

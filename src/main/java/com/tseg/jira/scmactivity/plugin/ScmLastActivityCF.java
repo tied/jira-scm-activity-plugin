@@ -25,7 +25,12 @@ public class ScmLastActivityCF extends CalculatedCFType {
     @Override
     public ScmActivityCustomFieldBean getValueFromIssue(CustomField field, Issue issue) 
     {
-        return ScmActivityServiceImpl.getInstance().getScmActivity(issue.getKey(), "DESC",1);
+        ScmActivityCustomFieldBean scmBean = ScmActivityServiceImpl.getInstance()
+                .getScmActivity(issue.getKey(), "DESC",1);
+        
+        scmBean.setChangeDate(ScmActivityUtils.getDateFromString(scmBean.getChangeDate()).toString());
+        
+        return scmBean;
     }
     
 }

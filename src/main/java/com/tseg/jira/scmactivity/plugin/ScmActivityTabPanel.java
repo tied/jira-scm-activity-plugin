@@ -37,7 +37,7 @@ public class ScmActivityTabPanel extends AbstractIssueTabPanel {
             actionBean.setChangeId(scmActivity.getChangeId());
             actionBean.setChangeType(scmActivity.getChangeType());
             actionBean.setChangeAuthor(scmActivity.getChangeAuthor());
-            Date changeDate = ScmActivityUtils.getInstance().getUtcDateFromString(scmActivity.getChangeDate());
+            Date changeDate = ScmActivityUtils.getDateFromString(scmActivity.getChangeDate());
             actionBean.setChangeDate(changeDate);
             actionBean.setChangeLink(scmActivity.getChangeLink());
             if(scmActivity.getChangeMessage() !=null) {
