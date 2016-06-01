@@ -1,13 +1,13 @@
 #disable_html_escaping()
 #if( $value )
 
-#if( $value.changeType.toLowerCase().startsWith('subversion') || $value.toLowerCase().changeType.startsWith('svn') )
+#if( $value.changeType.toLowerCase().startsWith('subversion') || $value.changeType.toLowerCase().startsWith('svn') )
     #set( $myChange = "Revision" )
     #set( $myChangeLogo = "subversion" )
 #elseif( $value.changeType.toLowerCase().startsWith('git') )
     #set( $myChange = "Revision" )
     #set( $myChangeLogo = "git" )
-#elseif ( $value.changeType.startsWith('collaborator') || $value.changeType.toLowerCase().startsWith('coco') )
+#elseif ( $value.changeType.toLowerCase().startsWith('collaborator') || $value.changeType.toLowerCase().startsWith('coco') )
     #set( $myChange = "Review" )
     #set( $myChangeLogo = "collaborator" )
 #elseif( $value.changeType.toLowerCase().startsWith('swarm') )
@@ -73,8 +73,8 @@
         <div id="scmactivityaffectdivCFC_$value.id" style="display: none;font-family: 'Courier New',Courier; font-size: 12px;">
         <table>
         #foreach ( $scmFile in $value.changeFiles )
-            <tr><td id="$scmFile.getFileAction().toLowerCase()" style="text-align:right;">$scmFile.getFileAction().toUpperCase()</td>
-            <td>&nbsp;</td>
+            <tr><td id="$scmFile.getFileAction().toLowerCase()" style="text-align:right;">
+                $scmFile.getFileAction().toUpperCase() &nbsp;</td>            
             <td>$scmFile.getFileName()
             #if( $scmFile.getFileVersion() )
                 #$scmFile.getFileVersion()

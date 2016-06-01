@@ -123,8 +123,8 @@
                 <div id="scmactivityaffectdiv_$scmId" style="display: none;font-family: 'Courier New',Courier; font-size: 12px;">
                 <table>
                 #foreach ( $scmFile in $changeFiles )
-                    <tr><td id="$scmFile.getFileAction().toLowerCase()" style="text-align:right;">$scmFile.getFileAction().toUpperCase()</td>
-                    <td>&nbsp;</td>
+                    <tr><td id="$scmFile.getFileAction().toLowerCase()" style="text-align:right;">
+                        $scmFile.getFileAction().toUpperCase() &nbsp;</td>
                     <td>$scmFile.getFileName()
                     #if( $scmFile.getFileVersion() )
                         #$scmFile.getFileVersion()

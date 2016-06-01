@@ -402,6 +402,8 @@ public class ScmActivityServiceImpl implements ScmActivityService {
                     scmBean.setJiraAuthor(ScmActivityUtils.getInstance()
                             .getJiraAuthor(scmBean.getChangeAuthor()));
 
+                    scmBean.setChangeDate(ScmActivityUtils
+                            .getDateFromString(scmBean.getChangeDate()).toString());
 
                     if( "git".equals(scmBean.getChangeType()) ) {
                         ApplicationUser user = ScmActivityUtils.getInstance()

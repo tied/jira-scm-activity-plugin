@@ -5,7 +5,6 @@ import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.renderer.wiki.WikiRendererFactory;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.renderer.RenderContext;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +31,7 @@ public class ScmActivityUtils {
             scmActivityUtils = new ScmActivityUtils();
         }
         return scmActivityUtils;
-    }
+    }    
     
     public static Date getDateFromString(String dateStr) {        
         // example: 2011-05-26 10:54:41+xx:xx (timezone is ignored because we parse utc timestamp date with utc parser)
@@ -68,10 +67,9 @@ public class ScmActivityUtils {
     }
     
     public String getWikiText(String plainText) {
-        String wikiText = null;
         WikiRendererFactory wikiFactory = new WikiRendererFactory();
-        wikiText = wikiFactory.getWikiRenderer().convertWikiToXHtml(new RenderContext(), plainText);                
-        return wikiText;
-    }        
+        return wikiFactory.getWikiRenderer()
+                .convertWikiToXHtml(new RenderContext(), plainText);
+    }
     
 }
