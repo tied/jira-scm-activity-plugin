@@ -48,7 +48,7 @@
         </a>
 
         <div class="action-details flooded">
-            <div id="$myChangeLogo" title="$changeType integration"></div>
+            <div id="$myChangeLogo" title="$changeType"></div>
             $myChange 
             #if ( $!changeLink && $!changeLink != "" ) 
                 <a href="$changeLink" target="_blank">$changeId</a>
@@ -86,7 +86,7 @@
 
         ## Main action detail
         <div class="action-details">
-            <div id="$myChangeLogo" title="$changeType integration"></div>
+            <div id="$myChangeLogo" title="$changeType"></div>
             $myChange  
             #if ( $!changeLink && $!changeLink != "" ) 
                 <a href="$changeLink" target="_blank">$changeId</a>
