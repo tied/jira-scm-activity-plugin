@@ -684,9 +684,9 @@ public class ScmActivityResource {
             if( notifyAs != null && !"".equals(notifyAs)) {
                 checkedInUser = userUtil.getUserByKey(notifyAs);
             } else {
-                if("git".equals(activityBean.getChangeType())) {
-                    checkedInUser = ScmActivityUtils.getInstance()
-                            .getJiraAuthorByEmail(activityBean.getChangeAuthor());
+                if( activityBean.getChangeType().contains("git") ) {
+                    checkedInUser = ScmActivityUtils.getInstance().getJiraAuthorByEmail(activityBean.getChangeAuthor());
+                    activityBean.setJiraAuthor(checkedInUser.getDisplayName());
                 } else {                    
                     checkedInUser = userUtil.getUserByKey(activityBean.getChangeAuthor());
                 }
@@ -699,8 +699,6 @@ public class ScmActivityResource {
                         + "so setting remote executing user.");
                 
                 checkedInUser = userUtil.getUserByKey(userManager.getRemoteUser().getUsername());
-            } else {
-                activityBean.setJiraAuthor(checkedInUser.getDisplayName());
             }
         
             Map<String, Object> context = new HashMap<String, Object>(); // params object

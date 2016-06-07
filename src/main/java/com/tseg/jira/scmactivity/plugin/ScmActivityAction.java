@@ -152,7 +152,7 @@ public class ScmActivityAction extends AbstractIssueAction {
         map.put("changeType", changeType);
         map.put("jiraAuthor", ScmActivityUtils.getInstance().getJiraAuthor(changeAuthor));
         
-        if("git".equals(changeType)) {
+        if( changeType.contains("git") ) {
             ApplicationUser user = ScmActivityUtils.getInstance()
                     .getJiraAuthorByEmail(changeAuthor);
             if( user != null ) {

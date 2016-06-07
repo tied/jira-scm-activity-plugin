@@ -405,7 +405,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
                     scmBean.setChangeDate(ScmActivityUtils
                             .getDateFromString(scmBean.getChangeDate()).toString());
 
-                    if( "git".equals(scmBean.getChangeType()) ) {
+                    if( scmBean.getChangeType().contains("git") ) {
                         ApplicationUser user = ScmActivityUtils.getInstance()
                                 .getJiraAuthorByEmail(scmBean.getChangeAuthor());
                         if( user != null ) {
@@ -519,8 +519,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
     public ScmActivityNotifyBean getScmActivityToNotify(String issueKey, String changeId, String changeType) {
         ScmActivityNotifyBean scmBean = null;
         ScmActivityBean activity = getScmActivity(issueKey, changeId, changeType);
-        if( activity != null ) {
-            
+        if( activity != null ) {            
             scmBean = new ScmActivityNotifyBean();
             scmBean.setId(activity.getId());
             scmBean.setIssueKey(activity.getIssueKey());
@@ -536,16 +535,9 @@ public class ScmActivityServiceImpl implements ScmActivityService {
             scmBean.setJobs(activity.getJobs());
             scmBean.setChangeMsgNonWiki(activity.getChangeMessage());
             scmBean.setChangeMessage(ScmActivityUtils.getInstance()
-                    .getWikiText(activity.getChangeMessage()));
-            
-            /*scmBean.setJiraAuthor(ScmActivityUtils.getInstance().getJiraAuthor(activity.getChangeAuthor()));
-            if( "git".equals(scmBean.getChangeType()) ) {
-                ApplicationUser user = ScmActivityUtils.getInstance().getJiraAuthor4Git(scmBean.getChangeAuthor());
-                if( user != null ) {
-                    scmBean.setChangeAuthor(user.getName());
-                    scmBean.setJiraAuthor(user.getDisplayName());
-                }
-            }*/
+                    .getWikiText(activity.getChangeMessage()));            
+            scmBean.setJiraAuthor(ScmActivityUtils.getInstance()
+                    .getJiraAuthor(activity.getChangeAuthor()));
         }
         return scmBean;
     }

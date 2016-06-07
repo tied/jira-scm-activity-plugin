@@ -1,6 +1,7 @@
 package com.tseg.jira.scmactivity.plugin;
 
 //import com.atlassian.crowd.embedded.api.User;
+import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.renderer.wiki.WikiRendererFactory;
 import com.atlassian.jira.user.ApplicationUser;
@@ -8,6 +9,8 @@ import com.atlassian.renderer.RenderContext;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
@@ -18,6 +21,7 @@ public class ScmActivityUtils {
     
     private static final Logger LOGGER = Logger.getLogger(ScmActivityUtils.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final Map<String, String> gitEmailCache = new HashMap<String, String>();
     private static ScmActivityUtils scmActivityUtils = null;
     private ScmActivityUtils() {
     }
@@ -55,15 +59,33 @@ public class ScmActivityUtils {
         return "";
     }
     
-    public ApplicationUser getJiraAuthorByEmail(String changeAuthorEmail) {    
-        ApplicationUser user = null;
+    public ApplicationUser getJiraAuthorByEmail(String email) {
+        String userKey = gitEmailCache.get(email.toLowerCase());
+        if( userKey != null && !userKey.isEmpty()) {
+            ApplicationUser user = ComponentAccessor.getUserUtil().getUser(userKey);
+            if( user != null && email.equalsIgnoreCase(user.getEmailAddress()) ) {
+                LOGGER.debug("User ["+userKey+"] picked from Git Cached Emails.");
+                return user;
+            } else {
+                gitEmailCache.remove(email.toLowerCase());
+            }
+        }
+        
+        for(ApplicationUser iUser : ComponentAccessor.getUserUtil().getUsers()) {
+            if(iUser.getEmailAddress().equalsIgnoreCase(email)) {
+                gitEmailCache.putIfAbsent(email.toLowerCase(), iUser.getName());
+                return iUser;
+            }
+        }
+        return null;
+        /*ApplicationUser user = null;
         for(ApplicationUser iUser : ComponentAccessor.getUserManager().getUsers()) {
             if(changeAuthorEmail.equalsIgnoreCase(iUser.getEmailAddress())) {                            
                 user = iUser;
                 break;
             }
         }        
-        return user;
+        return user;*/
     }
     
     public String getWikiText(String plainText) {

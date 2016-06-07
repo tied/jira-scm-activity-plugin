@@ -45,10 +45,7 @@
     #end
     #if ( $!value.changeBranch && $!value.changeBranch != "" )
         ($value.changeBranch) 
-    #end
-    #if ( $!value.changeTag && $!value.changeTag != "" )
-        ($value.changeTag) 
-    #end
+    #end    
     by 
     #if ( $!value.jiraAuthor != "" )
         <a href="/secure/ViewProfile.jspa?name=$value.changeAuthor">$value.jiraAuthor</a>
@@ -57,6 +54,9 @@
     #end
     -
     $value.changeDate
+    #if ( $!value.changeTag && $!value.changeTag != "" )
+        ($value.changeTag) 
+    #end
     #if ( $!value.changeStatus && $!value.changeStatus != "" )
         ($value.changeStatus)
     #end

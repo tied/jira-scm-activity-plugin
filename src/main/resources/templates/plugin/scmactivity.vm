@@ -57,10 +57,7 @@
             #end
             #if ( $!changeBranch && $!changeBranch != "" )
                 ($changeBranch) 
-            #end
-            #if ( $!changeTag && $!changeTag != "" )
-                ($changeTag) 
-            #end
+            #end            
             by 
             #if ( $!jiraAuthor != "" )
                 <a href="/secure/ViewProfile.jspa?name=$changeAuthor">$jiraAuthor</a>
@@ -69,6 +66,9 @@
             #end
             -
             $changeDate
+            #if ( $!changeTag && $!changeTag != "" )
+                ($changeTag) 
+            #end
             #if ( $!changeStatus && $!changeStatus != "" )
                 ($changeStatus)
             #end
@@ -95,10 +95,7 @@
             #end
             #if ( $!changeBranch && $!changeBranch != "" )
                 ($changeBranch) 
-            #end
-            #if ( $!changeTag && $!changeTag != "" )
-                ($changeTag) 
-            #end
+            #end            
             by 
             #if ( $!jiraAuthor != "" )
                 <a href="/secure/ViewProfile.jspa?name=$changeAuthor">$jiraAuthor</a>
@@ -107,6 +104,9 @@
             #end
             -
             $changeDate
+            #if ( $!changeTag && $!changeTag != "" )
+                ($changeTag) 
+            #end
             #if ( $!changeStatus && $!changeStatus != "" )
                 ($changeStatus)
             #end
