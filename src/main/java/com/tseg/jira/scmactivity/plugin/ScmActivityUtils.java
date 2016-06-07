@@ -1,7 +1,6 @@
 package com.tseg.jira.scmactivity.plugin;
 
 //import com.atlassian.crowd.embedded.api.User;
-import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.renderer.wiki.WikiRendererFactory;
 import com.atlassian.jira.user.ApplicationUser;
