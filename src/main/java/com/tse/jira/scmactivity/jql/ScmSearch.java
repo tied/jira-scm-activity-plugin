@@ -1,6 +1,6 @@
 package com.tse.jira.scmactivity.jql;
 
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.JiraDataType;
 import com.atlassian.jira.JiraDataTypes;
 import com.atlassian.jira.issue.Issue;
@@ -30,7 +30,7 @@ public class ScmSearch extends AbstractJqlFunction {
     }
     
     @Override
-    public MessageSet validate(User user, FunctionOperand operand, TerminalClause tc) {
+    public MessageSet validate(ApplicationUser user, FunctionOperand operand, TerminalClause tc) {
         MessageSet messageSet = validateNumberOfArgs(operand, 1);
         if ( messageSet.hasAnyErrors() ) {
             messageSet.addErrorMessage("scmSearch (\"The Change Search Text\")");

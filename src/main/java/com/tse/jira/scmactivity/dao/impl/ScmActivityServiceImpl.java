@@ -6,7 +6,7 @@
 package com.tse.jira.scmactivity.dao.impl;
 
 import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.tse.jira.scmactivity.dao.ScmActivityDB;
 import java.sql.SQLException;
 import com.tse.jira.scmactivity.dao.ScmActivityService;
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author vprasad
+ * @author scmenthusiast@gmail.com
  */
 public class ScmActivityServiceImpl implements ScmActivityService {
 
@@ -406,7 +406,7 @@ public class ScmActivityServiceImpl implements ScmActivityService {
                             .getDateFromString(scmBean.getChangeDate()).toString());
 
                     if( scmBean.getChangeType().contains("git") ) {
-                        User user = ScmActivityUtils.getInstance()
+                        ApplicationUser user = ScmActivityUtils.getInstance()
                                 .getJiraAuthorByEmail(scmBean.getChangeAuthor());
                         if( user != null ) {
                             scmBean.setChangeAuthor(user.getName());
