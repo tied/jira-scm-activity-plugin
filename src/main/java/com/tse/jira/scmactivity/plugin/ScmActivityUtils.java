@@ -61,7 +61,7 @@ public class ScmActivityUtils {
     public ApplicationUser getJiraAuthorByEmail(String email) {
         String userKey = gitEmailCache.get(email.toLowerCase());
         if( userKey != null && !userKey.isEmpty()) {
-            ApplicationUser user = ComponentAccessor.getUserUtil().getUser(userKey);
+            ApplicationUser user = ComponentAccessor.getUserUtil().getUserByKey(userKey);
             if( user != null && email.equalsIgnoreCase(user.getEmailAddress()) ) {
                 LOGGER.debug("User ["+userKey+"] picked from Git Cached Emails.");
                 return user;
@@ -72,7 +72,7 @@ public class ScmActivityUtils {
         
         for(ApplicationUser iUser : ComponentAccessor.getUserUtil().getUsers()) {
             if(iUser.getEmailAddress().equalsIgnoreCase(email)) {
-                gitEmailCache.putIfAbsent(email.toLowerCase(), iUser.getName());
+                gitEmailCache.putIfAbsent(email.toLowerCase(), iUser.getUsername());
                 return iUser;
             }
         }
