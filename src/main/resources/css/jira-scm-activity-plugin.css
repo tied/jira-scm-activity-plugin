@@ -76,6 +76,17 @@
     background-position: 50% 50%;
 }
 
+#designsync {
+    background-image: url('images/dssc.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 50% 50%;
+}
+
 #gerrit {
     background-image: url('images/gerrit.gif');
     background-repeat: no-repeat; 

@@ -5,19 +5,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.tseg.jira.scmactivity.plugin</groupId>
+    <groupId>com.tse.jira.scmactivity.plugin</groupId>
     <artifactId>jira-scm-activity-plugin</artifactId>
-    <version>2.0</version>
+    <version>1.0</version>
     <developers>
         <developer> 
-            <name>Venkat Prasad</name> 
-            <email>vprasad79@hotmail.com</email> 
-            <url>www.venkatprasad.in</url> 
+            <name>scmenthusiast@gmail.com</name> 
+            <email>scmenthusiast@gmail.com</email> 
+            <url>https://github.com/scmenthusiast</url> 
         </developer> 
     </developers>
     <organization>
-        <name>The SCM Enthusiasts</name>
-        <url>https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki</url>
+        <name>The SCM Enthusiast</name>
+        <url>https://github.com/scmenthusiast/jira-scm-activity-plugin/wiki</url>
     </organization>
 
     <name>SCM Activity For JIRA</name>
@@ -27,13 +27,7 @@
     </description>   
     <packaging>atlassian-plugin</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <version>2.1</version>
-            <scope>compile</scope>
-        </dependency>
+    <dependencies>        
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-api</artifactId>
@@ -98,7 +92,7 @@
     </build>
 
     <properties>
-        <jira.version>7.1.4</jira.version>
+        <jira.version>6.4.11</jira.version>
         <amps.version>5.0.3</amps.version>
         <plugin.testrunner.version>1.2.0</plugin.testrunner.version>
 	<!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->

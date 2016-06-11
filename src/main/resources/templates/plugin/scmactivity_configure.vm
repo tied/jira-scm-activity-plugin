@@ -195,11 +195,11 @@
 
 <!-- Documentation -->
 <h2>FAQs</h2>
-<p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Database-Set-Up">
+<p><a target="_blank" href="https://github.com/scmenthusiast/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Database-Set-Up">
 SCM Activity Plugin JDBC Configuration Guide</a></p>
-<p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-Hooks-OR-Plugins">
+<p><a target="_blank" href="https://github.com/scmenthusiast/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-Hooks-OR-Plugins">
 SCM Activity Plugin Hooks Scripts Or Plugins</a></p>
-<p><a target="_blank" href="https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-REST-API">
+<p><a target="_blank" href="https://github.com/scmenthusiast/jira-scm-activity-plugin/wiki/JIRA-SCM-Activity-Plugin-REST-API">
 SCM Activity Plugin REST API</a></p>
 
 </body>

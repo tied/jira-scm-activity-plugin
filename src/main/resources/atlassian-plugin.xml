@@ -25,21 +25,21 @@
     <!-- publish our component -->
     <component key="jira-scm-activity-configuration-manager" name="SCM Activity Configuration Manager" 
                 i18n-name-key="jira-scm-activity-configuration-manager.name"
-                class="com.tseg.jira.scmactivity.config.ScmActivityConfigMgrImpl">
+                class="com.tse.jira.scmactivity.config.ScmActivityConfigMgrImpl">
         <description key="jira-scm-activity-configuration-manager.description" />
-        <interface>com.tseg.jira.scmactivity.config.ScmActivityConfigMgr</interface>
+        <interface>com.tse.jira.scmactivity.config.ScmActivityConfigMgr</interface>
     </component>    
     
     <component key="jira-scm-activity-option-manager" name="SCM Activity Option Manager" 
                 i18n-name-key="jira-scm-activity-option-manager.name"
-                class="com.tseg.jira.scmactivity.config.ScmActivityOptionMgrImpl">
+                class="com.tse.jira.scmactivity.config.ScmActivityOptionMgrImpl">
         <description key="jira-scm-activity-option-manager.description" />
-        <interface>com.tseg.jira.scmactivity.config.ScmActivityOptionMgr</interface>
+        <interface>com.tse.jira.scmactivity.config.ScmActivityOptionMgr</interface>
     </component>
     
     <issue-tabpanel key="jira-scm-activity-tabpanel" name="SCM Activity Tab Panel" 
                 i18n-name-key="jira-scm-activity-tabpanel.name"
-                class="com.tseg.jira.scmactivity.plugin.ScmActivityTabPanel">
+                class="com.tse.jira.scmactivity.plugin.ScmActivityTabPanel">
         <description key="jira-scm-activity-tabpanel.description" />
         <label key="jira-scm-activity-tabpanel.label" />
         <sortable>false</sortable>		
@@ -65,7 +65,7 @@
    <!-- Calculated Custom field -->
    <customfield-type key="jira-scm-activity-cf-lastactivity" name="JIRA Last SCM Activity Custom Field" 
         i18n-name-key="jira-scm-activity-cf-lastactivity.name"
-        class="com.tseg.jira.scmactivity.plugin.ScmLastActivityCF">
+        class="com.tse.jira.scmactivity.plugin.ScmLastActivityCF">
         <description key="jira-scm-activity-cf-lastactivity.description" />
         <resource type="velocity" name="view" location="templates/plugin/lastscmactivity.vm"/>
         <resource type="velocity" name="column-view" location="templates/plugin/lastscmactivity_column.vm"/>
@@ -75,7 +75,7 @@
     <!-- JQL function to search scm activities -->
     <jql-function key="jira-scm-activity-search" name="SCM Activity Search" 
             i18n-name-key="jira-scm-activity-search.name" 
-            class="com.tseg.jira.scmactivity.jql.ScmActivitySearch">
+            class="com.tse.jira.scmactivity.jql.ScmActivitySearch">
             <description key="jira-scm-activity-search.description" />
             <fname>scmActivitySearch</fname>
             <list>true</list>
@@ -83,7 +83,7 @@
     
     <jql-function key="scm-search" name="SCM Search" 
         i18n-name-key="scm-search.name" 
-        class="com.tseg.jira.scmactivity.jql.ScmSearch">
+        class="com.tse.jira.scmactivity.jql.ScmSearch">
         <description key="scm-search.description" />
         <fname>scmSearch</fname>
         <list>true</list>
@@ -95,7 +95,7 @@
     <webwork1 key="jira-scm-activity-config-action" name="SCM Activity Configuration Action" i18n-name-key="jira-scm-activity-config-action.name">
         <description key="jira-scm-activity-config-action.description" />
         <actions>
-          <action name="com.tseg.jira.scmactivity.config.ScmActivityConfigAction" alias="ScmActivityConfigAction">
+          <action name="com.tse.jira.scmactivity.config.ScmActivityConfigAction" alias="ScmActivityConfigAction">
             <view name="success">/templates/plugin/scmactivity_configure.vm</view>
             <view name="error">/secure/views/permissionviolation.jsp</view>
           </action>
@@ -115,7 +115,7 @@
     <webwork1 key="jira-scm-activity-option-action" name="SCM Activity Options Action" i18n-name-key="jira-scm-activity-option-action.name">
         <description key="jira-scm-activity-option-action.description" />
         <actions>
-          <action name="com.tseg.jira.scmactivity.config.ScmActivityOptionAction" alias="ScmActivityOptionAction">
+          <action name="com.tse.jira.scmactivity.config.ScmActivityOptionAction" alias="ScmActivityOptionAction">
             <view name="success">/templates/plugin/scmactivity_options.vm</view>
             <view name="error">/secure/views/permissionviolation.jsp</view>
           </action>
