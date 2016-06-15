@@ -686,8 +686,8 @@ public class ScmActivityResource {
             } else {
                 if( activityBean.getChangeType().contains("git") ) {
                     checkedInUser = ScmActivityUtils.getInstance().getJiraAuthorByEmail(activityBean.getChangeAuthor());
-                    activityBean.setJiraAuthor(checkedInUser.getDisplayName());
-                } else {                    
+                    if( checkedInUser != null ) activityBean.setJiraAuthor(checkedInUser.getDisplayName());
+                } else {
                     checkedInUser = userUtil.getUserByKey(activityBean.getChangeAuthor());
                 }
             }
