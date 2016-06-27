@@ -1,6 +1,6 @@
 package com.tse.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.tse.jira.scmactivity.model.ScmActivityNotifyBean;
 import com.tse.jira.scmactivity.model.ScmChangeSetBean;
 import com.tse.jira.scmactivity.model.ScmJobLinkBean;
@@ -15,7 +15,7 @@ import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.issue.MutableIssue;
 import com.atlassian.jira.permission.ProjectPermissions;
 import com.atlassian.jira.security.PermissionManager;
-//import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserUtil;
 import com.atlassian.sal.api.user.UserManager;
 import com.tse.jira.scmactivity.dao.ScmActivityDB;
@@ -679,16 +679,16 @@ public class ScmActivityResource {
             if( activityBean !=null  ) {
             MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey());
 
-            User checkedInUser = null;
+            ApplicationUser checkedInUser = null;
             
             if( notifyAs != null && !"".equals(notifyAs)) {
-                checkedInUser = userUtil.getUser(notifyAs);
+                checkedInUser = userUtil.getUserByKey(notifyAs);
             } else {
                 if( activityBean.getChangeType().contains("git") ) {
                     checkedInUser = ScmActivityUtils.getInstance().getJiraAuthorByEmail(activityBean.getChangeAuthor());
                     if( checkedInUser != null ) activityBean.setJiraAuthor(checkedInUser.getDisplayName());
                 } else {
-                    checkedInUser = userUtil.getUser(activityBean.getChangeAuthor());
+                    checkedInUser = userUtil.getUserByKey(activityBean.getChangeAuthor());
                 }
             }
         
@@ -698,7 +698,7 @@ public class ScmActivityResource {
                 LOGGER.debug("change user("+activityBean.getChangeAuthor()+")/notifyas user("+notifyAs+") is not exists! "
                         + "so setting remote executing user.");
                 
-                checkedInUser = userUtil.getUser(userManager.getRemoteUser().getUsername());
+                checkedInUser = userUtil.getUserByKey(userManager.getRemoteUser().getUsername());
             }
         
             Map<String, Object> context = new HashMap<String, Object>(); // params object

@@ -1,9 +1,9 @@
 package com.tse.jira.scmactivity.plugin;
 
-import com.atlassian.crowd.embedded.api.User;
+//import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.renderer.wiki.WikiRendererFactory;
-//import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.renderer.RenderContext;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,17 +51,17 @@ public class ScmActivityUtils {
     }
     
     public String getJiraAuthor(String changeAuthor) {
-        User user = ComponentAccessor.getUserManager().getUser(changeAuthor);
+        ApplicationUser user = ComponentAccessor.getUserManager().getUserByKey(changeAuthor);
         if( user != null ) {
             return user.getDisplayName();
         }
         return "";
     }
     
-    public User getJiraAuthorByEmail(String email) {
+    public ApplicationUser getJiraAuthorByEmail(String email) {
         String userKey = gitEmailCache.get(email.toLowerCase());
         if( userKey != null && !userKey.isEmpty()) {
-            User user = ComponentAccessor.getUserUtil().getUser(userKey);
+            ApplicationUser user = ComponentAccessor.getUserManager().getUserByKey(userKey);
             if( user != null && email.equalsIgnoreCase(user.getEmailAddress()) ) {
                 LOGGER.debug("User ["+userKey+"] picked from Git Cached Emails.");
                 return user;
@@ -70,9 +70,9 @@ public class ScmActivityUtils {
             }
         }
         
-        for(User iUser : ComponentAccessor.getUserUtil().getUsers()) {
+        for(ApplicationUser iUser : ComponentAccessor.getUserManager().getUsers()) {
             if(iUser.getEmailAddress().equalsIgnoreCase(email)) {
-                gitEmailCache.putIfAbsent(email.toLowerCase(), iUser.getName());
+                gitEmailCache.putIfAbsent(email.toLowerCase(), iUser.getUsername());
                 return iUser;
             }
         }
