@@ -39,8 +39,7 @@ public class ScmActivityOptionAction extends JiraWebActionSupport {
                 ScmActivityDB.customEventId = Integer.parseInt(optionBean.getJira_event_id());
                 ScmActivityDB.expandCount = Integer.parseInt(optionBean.getExpand_count());
                 status="Saved!";
-            }
-            catch (NumberFormatException e){
+            } catch (NumberFormatException e){
                 LOGGER.error(e);
                 status = "Failed! "+e.getLocalizedMessage();
             }
@@ -53,6 +52,7 @@ public class ScmActivityOptionAction extends JiraWebActionSupport {
     }
 
     public void setJira_event_id(String jira_event_id) {
+        if( "".equals(jira_event_id) ) jira_event_id = "0";
         optionBean.setJira_event_id(jira_event_id);
     }
     
