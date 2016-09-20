@@ -114,7 +114,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(issueKey.trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project access is required.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -155,7 +155,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(issueKey.trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project access is required.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -272,7 +272,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey().trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.ADD_COMMENTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project access[add comments] is required.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -338,7 +338,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey().trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.EDIT_ALL_COMMENTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project access[edit comments] is required.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -410,7 +410,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey().trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.EDIT_ALL_COMMENTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project access[edit comments] is required.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -467,7 +467,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(activityBean.getIssueKey().trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.ADD_COMMENTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project access[add comments] is required.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -541,7 +541,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(issueKey.trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.ADMINISTER_PROJECTS, 
-                issue, userUtil.getUserByKey(username)) == false ) {
+                issue, userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project administrators only.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -593,7 +593,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(issueKey.trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.ADMINISTER_PROJECTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project administrators only.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -646,7 +646,7 @@ public class ScmActivityResource {
         String username = userManager.getRemoteUser().getUsername();
         MutableIssue issue = issueManager.getIssueObject(issueKey.trim().toUpperCase());
         if( permissionManager.hasPermission(ProjectPermissions.ADMINISTER_PROJECTS, issue, 
-                userUtil.getUserByKey(username)) == false ) {
+                userUtil.getUserByName(username)) == false ) {
             messageBean.setMessage("[Error] Permission denied. Project administrators only.");
             return Response.status(Response.Status.FORBIDDEN).entity(messageBean).build();
         }
@@ -682,13 +682,13 @@ public class ScmActivityResource {
             ApplicationUser checkedInUser = null;
             
             if( notifyAs != null && !"".equals(notifyAs)) {
-                checkedInUser = userUtil.getUserByKey(notifyAs);
+                checkedInUser = userUtil.getUserByName(notifyAs);
             } else {
                 if( activityBean.getChangeType().contains("git") ) {
                     checkedInUser = ScmActivityUtils.getInstance().getJiraAuthorByEmail(activityBean.getChangeAuthor());
                     if( checkedInUser != null ) activityBean.setJiraAuthor(checkedInUser.getDisplayName());
                 } else {
-                    checkedInUser = userUtil.getUserByKey(activityBean.getChangeAuthor());
+                    checkedInUser = userUtil.getUserByName(activityBean.getChangeAuthor());
                 }
             }
         
@@ -698,7 +698,7 @@ public class ScmActivityResource {
                 LOGGER.debug("change user("+activityBean.getChangeAuthor()+")/notifyas user("+notifyAs+") is not exists! "
                         + "so setting remote executing user.");
                 
-                checkedInUser = userUtil.getUserByKey(userManager.getRemoteUser().getUsername());
+                checkedInUser = userUtil.getUserByName(userManager.getRemoteUser().getUsername());
             }
         
             Map<String, Object> context = new HashMap<String, Object>(); // params object
