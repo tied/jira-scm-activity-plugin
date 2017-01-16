@@ -71,6 +71,54 @@ public class ScmActivitySchema {
             + ")";
     
     
+    
+    /**
+     * PostgreSQL Schema Table(s)
+     */
+    
+    private final String POSTGRES_SCM_ACTIVITY = "CREATE TABLE IF NOT EXISTS scm_activity ("
+            + "ID bigserial NOT NULL,"
+            + "issueKey VARCHAR(50) NOT NULL,"
+            + "changeId VARCHAR(50) NOT NULL,"
+            + "changeDate VARCHAR(50) NOT NULL,"
+            + "changeAuthor VARCHAR(50) NOT NULL,"
+            + "changeLink VARCHAR(255) NULL,"
+            + "changeType VARCHAR(50) NOT NULL,"
+            + "changeBranch VARCHAR(255) NULL,"
+            + "changeTag VARCHAR(50) NULL,"
+            + "changeStatus VARCHAR(50) NULL,"
+            + "PRIMARY KEY (ID),"
+            + "CONSTRAINT scm_issuekey_changeid_type UNIQUE (issueKey, changeId, changeType)"
+            + ")";
+    private final String POSTGRES_SCM_MESSAGE = "CREATE TABLE IF NOT EXISTS scm_message ("
+            + "ID bigserial NOT NULL,"
+            + "scmActivityID BIGINT NOT NULL,"
+            + "message TEXT NULL,"
+            + "PRIMARY KEY (ID),"
+            + "CONSTRAINT scm_activity_id UNIQUE (scmActivityID),"
+            + "CONSTRAINT FK_scm_message_activity FOREIGN KEY (scmActivityID) REFERENCES scm_activity(ID) ON DELETE CASCADE"
+            + ")";
+    private final String POSTGRES_SCM_FILES = "CREATE TABLE IF NOT EXISTS scm_files ("
+            + "ID bigserial NOT NULL,"
+            + "scmActivityID BIGINT NOT NULL,"
+            + "fileName VARCHAR(255) NOT NULL,"
+            + "fileAction VARCHAR(50) NOT NULL,"
+            + "fileVersion VARCHAR(50) NULL,"
+            + "PRIMARY KEY (ID),"
+            + "CONSTRAINT FK_scm_files_activity FOREIGN KEY (scmActivityID) REFERENCES scm_activity (ID) ON DELETE CASCADE"
+            + ")";
+    private final String POSTGRES_SCM_JOB = "CREATE TABLE IF NOT EXISTS scm_job ("
+            + "ID bigserial NOT NULL,"
+            + "scmActivityID BIGINT NOT NULL,"
+            + "jobName VARCHAR(255) NOT NULL,"
+            + "jobLink VARCHAR(255) NULL,"
+            + "jobStatus VARCHAR(50) NULL,"
+            + "PRIMARY KEY (ID),"
+            + "CONSTRAINT scm_activity_id_jobname UNIQUE (jobName, scmActivityID),"
+            + "CONSTRAINT FK_scm_job_activity FOREIGN KEY (scmActivityID) REFERENCES scm_activity (ID) ON DELETE CASCADE"
+            + ")";
+    
+    
     /**
      * Microsoft SQL Server Schema Table(s)
      */
@@ -200,6 +248,11 @@ public class ScmActivitySchema {
                 statement.addBatch(MYSQL_SCM_MESSAGE);
                 statement.addBatch(MYSQL_SCM_FILES);
                 statement.addBatch(MYSQL_SCM_JOB); 
+            } else if( db_url.contains("jdbc:postgresql") ) {
+                statement.addBatch(POSTGRES_SCM_ACTIVITY);
+                statement.addBatch(POSTGRES_SCM_MESSAGE);
+                statement.addBatch(POSTGRES_SCM_FILES);
+                statement.addBatch(POSTGRES_SCM_JOB);
             } else if( db_url.contains("jdbc:sqlite") ) {
                 statement.addBatch(SQLITE_SCM_ACTIVITY);
                 statement.addBatch(SQLITE_SCM_MESSAGE);
@@ -216,14 +269,14 @@ public class ScmActivitySchema {
             } else {
                 messageBean.setId(0);
                 messageBean.setMessage("Connection Passed! Schema initialize failed. "
-                    + "Create these <a target='_blank' href='https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/tree/master/sql'>schema tables</a> manually");
+                    + "Create these <a target='_blank' href='https://github.com/scmenthusiast/jira-scm-activity-misc/tree/master/schema'>schema tables</a> manually");
             }
         }
         catch(SQLException ex) {
             LOGGER.error(ex);
             messageBean.setId(result);
             messageBean.setMessage("Connection Passed! Schema initialize failed. "
-                    + "Create these <a target='_blank' href='https://github.com/the-scm-enthusiast-group/jira-scm-activity-plugin/tree/master/sql'>schema tables</a> manually");
+                    + "Create these <a target='_blank' href='https://github.com/scmenthusiast/jira-scm-activity-misc/tree/master/schema'>schema tables</a> manually");
             return messageBean;
         }
         finally{

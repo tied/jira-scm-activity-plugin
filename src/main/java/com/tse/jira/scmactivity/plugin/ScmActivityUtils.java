@@ -5,6 +5,7 @@ import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.renderer.wiki.WikiRendererFactory;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.renderer.RenderContext;
+import com.tse.jira.scmactivity.dao.ScmActivityDB;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class ScmActivityUtils {
     
     private static final Logger LOGGER = Logger.getLogger(ScmActivityUtils.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static final Map<String, String> gitEmailCache = new HashMap<String, String>();
+    private static final Map<String, String> GIT_EMAIL_CACHE = new HashMap<String, String>();
     private static ScmActivityUtils scmActivityUtils = null;
     private ScmActivityUtils() {
     }
@@ -51,29 +52,33 @@ public class ScmActivityUtils {
     }
     
     public String getJiraAuthor(String changeAuthor) {
-        ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(changeAuthor);
-        if( user != null ) {
-            return user.getDisplayName();
+        if( ScmActivityDB.is_map_users == true ) {
+            ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(changeAuthor);
+            if( user != null ) {
+                return user.getDisplayName();
+            }
         }
         return "";
     }
     
     public ApplicationUser getJiraAuthorByEmail(String email) {
-        String userKey = gitEmailCache.get(email.toLowerCase());
-        if( userKey != null && !userKey.isEmpty()) {
-            ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(userKey);
-            if( user != null && email.equalsIgnoreCase(user.getEmailAddress()) ) {
-                LOGGER.debug("User ["+userKey+"] picked from Git Cached Emails.");
-                return user;
-            } else {
-                gitEmailCache.remove(email.toLowerCase());
+        if( ScmActivityDB.is_map_users == true ) {
+        String userKey = GIT_EMAIL_CACHE.get(email.toLowerCase());
+            if( userKey != null && !userKey.isEmpty()) {
+                ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(userKey);
+                if( user != null && email.equalsIgnoreCase(user.getEmailAddress()) ) {
+                    LOGGER.debug("User ["+userKey+"] picked from Git Cached Emails.");
+                    return user;
+                } else {
+                    GIT_EMAIL_CACHE.remove(email.toLowerCase());
+                }
             }
-        }
-        
-        for(ApplicationUser iUser : ComponentAccessor.getUserManager().getUsers()) {
-            if(iUser.getEmailAddress().equalsIgnoreCase(email)) {
-                gitEmailCache.putIfAbsent(email.toLowerCase(), iUser.getUsername());
-                return iUser;
+
+            for(ApplicationUser iUser : ComponentAccessor.getUserManager().getUsers()) {
+                if(iUser.getEmailAddress().equalsIgnoreCase(email)) {
+                    GIT_EMAIL_CACHE.putIfAbsent(email.toLowerCase(), iUser.getUsername());
+                    return iUser;
+                }
             }
         }
         return null;

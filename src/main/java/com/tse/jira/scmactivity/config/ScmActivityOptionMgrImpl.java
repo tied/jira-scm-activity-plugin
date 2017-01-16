@@ -17,6 +17,7 @@ public class ScmActivityOptionMgrImpl implements ScmActivityOptionMgr {
     @Override
     public ScmActivityOptionBean getScmOptionProperties() {
         ScmActivityOptionBean configBean = new ScmActivityOptionBean();
+        configBean.setIs_map_users(applicationProperties.getString(ScmActivityOptionMgr.IS_MAP_USERS));
         configBean.setJira_event_id(applicationProperties.getString(ScmActivityOptionMgr.JIRA_EVENT_ID));
         configBean.setExpand_count(applicationProperties.getString(ScmActivityOptionMgr.EXPAND_COUNT));
         return configBean;
@@ -24,6 +25,7 @@ public class ScmActivityOptionMgrImpl implements ScmActivityOptionMgr {
 
     @Override
     public void setScmOptionProperties(ScmActivityOptionBean configBean) {
+        applicationProperties.setString(ScmActivityOptionMgr.IS_MAP_USERS, configBean.getIs_map_users());
         applicationProperties.setString(ScmActivityOptionMgr.JIRA_EVENT_ID, configBean.getJira_event_id());
         applicationProperties.setString(ScmActivityOptionMgr.EXPAND_COUNT, configBean.getExpand_count());
     }

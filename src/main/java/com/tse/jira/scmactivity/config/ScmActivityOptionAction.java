@@ -35,7 +35,9 @@ public class ScmActivityOptionAction extends JiraWebActionSupport {
             
             LOGGER.debug("jira event id -> "+ optionBean.getJira_event_id());
             LOGGER.debug("jira expand count -> "+ optionBean.getExpand_count());
+            LOGGER.debug("is map users -> "+ optionBean.getIs_map_users());
             try {
+                ScmActivityDB.is_map_users = Boolean.parseBoolean(optionBean.getIs_map_users());
                 ScmActivityDB.customEventId = Integer.parseInt(optionBean.getJira_event_id());
                 ScmActivityDB.expandCount = Integer.parseInt(optionBean.getExpand_count());
                 status="Saved!";
@@ -47,6 +49,15 @@ public class ScmActivityOptionAction extends JiraWebActionSupport {
         return "success";
     }    
 
+    public String getIs_map_users() {
+        return optionBean.getIs_map_users();
+    }
+    
+    public void setIs_map_users(String is_map_users) {
+        if( "".equals(is_map_users) ) is_map_users = "false";
+        optionBean.setIs_map_users(is_map_users);
+    }
+    
     public String getJira_event_id() {
         return optionBean.getJira_event_id();
     }

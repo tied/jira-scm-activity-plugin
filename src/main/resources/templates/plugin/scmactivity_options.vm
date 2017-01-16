@@ -27,6 +27,21 @@
 
 <div class="field-group">
     <label for="disabled-field-id">
+        $i18n.getText("scm.activity.admin.is_map_users.label"):
+        <!--<span class="aui-icon icon-required"></span>-->
+    </label>    
+    <select id="is_map_users" name="is_map_users" class="text" disabled="">
+        #foreach ($option in ["false", "true"])
+            <option value="$option"
+            #if ($option && $option == $is_map_users)selected#end
+            >$option</option>
+        #end
+    </select>
+    <div class="description">$i18n.getText("scm.activity.admin.is_map_users.description")</div>
+</div>
+
+<div class="field-group">
+    <label for="disabled-field-id">
         $i18n.getText("scm.activity.admin.jira_event_id.label"):
         <!--<span class="aui-icon icon-required"></span>-->
     </label>
@@ -63,6 +78,21 @@
 <div id="scmOptionEdit" style="display: none;">
 <form id="admin" class="aui" method="post" action="ScmActivityOptionAction.jspa" >
 <h2>$i18n.getText("scm.activity.admin.option.label") &rarr; EDIT</h2>
+
+<div class="field-group">
+    <label for="expand_sets">
+        $i18n.getText("scm.activity.admin.is_map_users.label"):
+        <span class="aui-icon icon-required"></span>
+    </label>
+    <select id="is_map_users" name="is_map_users" class="text" value="$!is_map_users">
+        #foreach ($option in ["false", "true"])
+            <option value="$option"
+            #if ($option && $option == $is_map_users)selected#end
+            >$option</option>
+        #end
+    </select>
+    <div class="description">$i18n.getText("scm.activity.admin.is_map_users.description")</div>
+</div>
 
 <div class="field-group">
     <label for="jira_event_id">

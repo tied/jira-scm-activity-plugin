@@ -24,7 +24,8 @@ public class ScmActivityDB {
     private static final Logger LOGGER = Logger.getLogger(ScmActivityDB.class);
 
     private static ScmActivityDB scmActivityDB = null;
-    private static BasicDataSource dataSource = null;    
+    private static BasicDataSource dataSource = null;
+    public static boolean is_map_users = false;
     public static int customEventId = 0;
     public static int expandCount = 1;
     public static int maxActive = 20;
@@ -82,7 +83,7 @@ public class ScmActivityDB {
             dataSource.setMaxIdle(20);
             dataSource.setMaxWaitMillis(30000);
             dataSource.setValidationQuery("select 1");
-            dataSource.setValidationQueryTimeout(3);
+            //dataSource.setValidationQueryTimeout(3);
             dataSource.setRemoveAbandonedTimeout(300);
             dataSource.setRemoveAbandonedOnMaintenance(true);
             dataSource.setTestWhileIdle(true);
